@@ -1,37 +1,26 @@
 package napplet;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import processing.core.PApplet;
 import processing.core.PImage;
 
-@SuppressWarnings({ "serial", "unused" })
+@SuppressWarnings( { "serial" })
 public class Napplet extends PApplet {
 
-	volatile boolean resizeRequest;
-	volatile int resizeWidth;
-	volatile int resizeHeight;
-
 	/**
-	 * Time in milliseconds when the applet was started.
-	 * <P>
-	 * Used by the millis() function.
+	 * Time in milliseconds when the applet was started. We need to have our own
+	 * number for this since PApplet's millisOffset is private.
 	 */
 	long millisOffset;
 
-	//Thread thread;
+	/**
+	 * Overrides PApplet's millis() routine.
+	 */
+	public int millis() {
+		return (int) (parentPApplet.millis() - millisOffset);
+	}
 
 	// New members for Napplet
 
@@ -44,10 +33,25 @@ public class Napplet extends PApplet {
 	}
 
 	/**
-	 * Replaces call to init() for sub-sketch Napplets (I hope.)
+	 * Used to initialize an embedded NApplet. Replaces the call to init().
+	 * 
+	 * @param pap
+	 *            Parent PApplet (or NApplet)
+	 * @param x
+	 *            x-coordinate of top-left corner of this NApplet's area within
+	 *            the parent's graphic space.
+	 * @param y
+	 *            y-coordinate of top-left corner of this NApplet's area within
+	 *            the parent's graphic space.
+	 * @param w
+	 *            Width of this NApplet's graphic space.
+	 * @param h
+	 *            Height of this NApplet's graphic space.
+	 * @param sketchPath
+	 *            Path for this NApplet's home folder.
 	 */
 	public void nappletInit(PApplet pap, int x, int y, int w, int h,
-			String skPath) {
+			String sketchPath) {
 
 		parentPApplet = pap;
 
@@ -68,7 +72,7 @@ public class Napplet extends PApplet {
 
 		online = parentPApplet.online;
 
-		sketchPath = skPath;
+		this.sketchPath = sketchPath;
 
 		g = makeGraphics(w, h, getSketchRenderer(), null, true);
 
@@ -79,21 +83,32 @@ public class Napplet extends PApplet {
 		embeddedNapplet = true;
 	}
 
+	/**
+	 * Accessor for queueing mouse events. Used by the NAppletManager.
+	 * 
+	 * @param event
+	 *            Mouse event. This needs to be translated to the NApplet's
+	 *            local screen coordinates.
+	 */
 	public void passMouseEvent(MouseEvent event) {
 		this.enqueueMouseEvent(event);
 	}
 
+	/**
+	 * Accessor for queueing keyboard events. Used by the NAppletManager.
+	 * 
+	 * @param event
+	 *            Keyboard event.
+	 */
 	public void passKeyEvent(KeyEvent event) {
 		this.enqueueKeyEvent(event);
 	}
-	
-	public void setup() {
-	}
 
-	public void draw() {
-		finished = true;
-	}
-
+	/**
+	 * Override PApplet.paint(). If the NApplet is embedded, uses the
+	 * PApplet.image() method to paint the NApplet's pixels into the parent's
+	 * display. Otherwise, just falls through to PApplet.paint().
+	 */
 	protected void paint() {
 		if (embeddedNapplet) {
 			loadPixels();
@@ -102,124 +117,61 @@ public class Napplet extends PApplet {
 			super.paint();
 	}
 
-	// ////////////////////////////////////////////////////////////
-
-	public void focusGained() {
-	}
-
-	public void focusGained(FocusEvent e) {
-		focused = true;
-		focusGained();
-	}
-
-	public void focusLost() {
-	}
-
-	public void focusLost(FocusEvent e) {
-		focused = false;
-		focusLost();
-	}
-
-	// ////////////////////////////////////////////////////////////
-
-	// controlling time (playing god)
+	// These next two need to be replaced with routines that work for embedded
+	// NApplets. Obviously delay() will only be manageable down to a resolution
+	// of 1/framerate, and framerate() may just not be possible to do in a
+	// non-crappy way.
 
 	public void delay(int napTime) {
-		System.err.println("Napplet: delay() disabled.");
+		System.err.println("NApplet: delay() disabled.");
 	}
 
 	public void frameRate(float newRateTarget) {
-		System.err.println("Napplet: frameRate(float newRateTarget) disabled.");
+		System.err.println("NApplet: frameRate(float newRateTarget) disabled.");
 	}
 
-	// ////////////////////////////////////////////////////////////
-
-	// CURSOR
+	// Disabled cursor manipulation for embedded NApplets for now. Will probably
+	// bring it back at some
+	// point, but it'll be tricky to manage it properly for embedded NApplets.
 
 	public void cursor(int cursorType) {
-		System.err.println("Napplet: Cursor manipulation disabled for now.");
+		if (embeddedNapplet)
+			System.err
+					.println("NApplet: Cursor manipulation disabled for now.");
+		else
+			super.cursor(cursorType);
 	}
 
 	public void cursor(PImage image) {
-		System.err.println("Napplet: Cursor manipulation disabled for now.");
+		if (embeddedNapplet)
+			System.err
+					.println("NApplet: Cursor manipulation disabled for now.");
+		else
+			super.cursor(image);
 	}
 
 	public void cursor(PImage image, int hotspotX, int hotspotY) {
-		System.err.println("Napplet: Cursor manipulation disabled for now.");
+		if (embeddedNapplet)
+			System.err
+					.println("NApplet: Cursor manipulation disabled for now.");
+		else
+			super.cursor(image, hotspotX, hotspotY);
 	}
 
 	public void cursor() {
-		System.err.println("Napplet: Cursor manipulation disabled for now.");
+		if (embeddedNapplet)
+			System.err
+					.println("NApplet: Cursor manipulation disabled for now.");
+		else
+			super.cursor();
 	}
 
 	public void noCursor() {
-		System.err.println("Napplet: Cursor manipulation disabled for now.");
-	}
-
-	// ////////////////////////////////////////////////////////////
-
-	// MAIN
-
-	/**
-	 * Set this sketch to communicate its state back to the PDE.
-	 * <p/>
-	 * This uses the stderr stream to write positions of the window (so that it
-	 * will be saved by the PDE for the next run) and notify on quit. See more
-	 * notes in the Worker class.
-	 */
-	public void setupExternalMessages() {
-
-		frame.addComponentListener(new ComponentAdapter() {
-			public void componentMoved(ComponentEvent e) {
-				Point where = ((Frame) e.getSource()).getLocation();
-				System.err.println(PApplet.EXTERNAL_MOVE + " " + where.x + " "
-						+ where.y);
-				System.err.flush(); // doesn't seem to help or hurt
-			}
-		});
-
-		frame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				// System.err.println(PApplet.EXTERNAL_QUIT);
-				// System.err.flush(); // important
-				// System.exit(0);
-				exit(); // don't quit, need to just shut everything down (0133)
-			}
-		});
-	}
-
-	/**
-	 * Set up a listener that will fire proper component resize events in cases
-	 * where frame.setResizable(true) is called.
-	 */
-	public void setupFrameResizeListener() {
-		frame.addComponentListener(new ComponentAdapter() {
-
-			public void componentResized(ComponentEvent e) {
-				// Ignore bad resize events fired during setup to fix
-				// http://dev.processing.org/bugs/show_bug.cgi?id=341
-				// This should also fix the blank screen on Linux bug
-				// http://dev.processing.org/bugs/show_bug.cgi?id=282
-				if (frame.isResizable()) {
-					// might be multiple resize calls before visible (i.e. first
-					// when pack() is called, then when it's resized for use).
-					// ignore them because it's not the user resizing things.
-					Frame farm = (Frame) e.getComponent();
-					if (farm.isVisible()) {
-						Insets insets = farm.getInsets();
-						Dimension windowSize = farm.getSize();
-						int usableW = windowSize.width - insets.left
-								- insets.right;
-						int usableH = windowSize.height - insets.top
-								- insets.bottom;
-
-						// the ComponentListener in PApplet will handle calling
-						// size()
-						setBounds(insets.left, insets.top, usableW, usableH);
-					}
-				}
-			}
-		});
+		if (embeddedNapplet)
+			System.err
+					.println("NApplet: Cursor manipulation disabled for now.");
+		else
+			super.noCursor();
 	}
 
 }

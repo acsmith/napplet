@@ -1,5 +1,9 @@
 package napplet;
 
+import static java.awt.event.FocusEvent.FOCUS_GAINED;
+import static java.awt.event.FocusEvent.FOCUS_LOST;
+
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -13,8 +17,10 @@ public class NappletManager {
 
 	PApplet parentPApplet;
 
+	Napplet focusNapplet;
+	Napplet mouseNapplet;
 	public int mouseX, mouseY;
-	
+
 	public NappletManager(PApplet pap) {
 		super();
 		parentPApplet = pap;
@@ -50,21 +56,39 @@ public class NappletManager {
 			nap.handleDraw();
 	}
 
+	void passMouseEvent(Napplet nap, MouseEvent event) {
+		event.translatePoint(-(nap.nappletX), -(nap.nappletY));
+		nap.passMouseEvent(event);
+	}
+
 	public void mouseEvent(MouseEvent event) {
 		mouseX = event.getX();
 		mouseY = event.getY();
 
 		Napplet nap = containingNapplet(mouseX, mouseY);
-		if (nap != null) {
-			event.translatePoint(-(nap.nappletX), -(nap.nappletY));
-			nap.passMouseEvent(event);
+		if ((event.getID() == java.awt.event.MouseEvent.MOUSE_DRAGGED)
+				&& (mouseNapplet != null)) {
+			passMouseEvent(mouseNapplet, event);
+		} else if (nap != null) {
+			passMouseEvent(nap, event);
+			mouseNapplet = nap;
+			if (nap != focusNapplet) {
+				FocusEvent gainFocus = new FocusEvent(nap, FOCUS_GAINED, false,
+						focusNapplet);
+				nap.focusGained(gainFocus);
+				if (focusNapplet!=null) {	
+					FocusEvent loseFocus = new FocusEvent(focusNapplet,
+							FOCUS_LOST, false, nap);
+					focusNapplet.focusLost(loseFocus);
+				}
+				focusNapplet = nap;
+			}
 		}
 	}
 
 	public void keyEvent(KeyEvent event) {
-		Napplet nap = containingNapplet(mouseX, mouseY);
-		if (nap != null) {
-			nap.passKeyEvent(event);
+		if (focusNapplet != null) {
+			focusNapplet.passKeyEvent(event);
 		}
 	}
 }
