@@ -9,6 +9,7 @@ import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -16,7 +17,7 @@ import java.awt.event.WindowEvent;
 import processing.core.PApplet;
 import processing.core.PImage;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "unused" })
 public class Napplet extends PApplet {
 
 	volatile boolean resizeRequest;
@@ -81,6 +82,10 @@ public class Napplet extends PApplet {
 	public void passMouseEvent(MouseEvent event) {
 		this.enqueueMouseEvent(event);
 	}
+
+	public void passKeyEvent(KeyEvent event) {
+		this.enqueueKeyEvent(event);
+	}
 	
 	public void setup() {
 	}
@@ -95,26 +100,6 @@ public class Napplet extends PApplet {
 			parentPApplet.image(this.g, nappletX, nappletY);
 		} else
 			super.paint();
-	}
-
-	// ////////////////////////////////////////////////////////////
-
-	public void addListeners() {
-		addMouseListener(this);
-		addMouseMotionListener(this);
-		addKeyListener(this);
-		addFocusListener(this);
-
-		addComponentListener(new ComponentAdapter() {
-			public void componentResized(ComponentEvent e) {
-				Component c = e.getComponent();
-				// System.out.println("componentResized() " + c);
-				Rectangle bounds = c.getBounds();
-				resizeRequest = true;
-				resizeWidth = bounds.width;
-				resizeHeight = bounds.height;
-			}
-		});
 	}
 
 	// ////////////////////////////////////////////////////////////
