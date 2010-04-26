@@ -8,13 +8,13 @@ import processing.core.PImage;
 
 @SuppressWarnings( { "serial" })
 public class NApplet extends PApplet {
-	
+
 	public static final String VERSION = "0.1.0";
-	
+
 	public String version() {
 		return VERSION;
 	}
-	
+
 	/**
 	 * Time in milliseconds when the applet was started. We need to have our own
 	 * number for this since PApplet's millisOffset is private.
@@ -54,7 +54,7 @@ public class NApplet extends PApplet {
 	boolean embeddedNapplet = false;
 
 	/**
-	 * Do-nothing constructor.  Use nappletInit() to initialize a NApplet.
+	 * Do-nothing constructor. Use nappletInit() to initialize a NApplet.
 	 */
 	public NApplet() {
 	}
@@ -70,15 +70,10 @@ public class NApplet extends PApplet {
 	 * @param y
 	 *            y-coordinate of top-left corner of this NApplet's area within
 	 *            the parent's graphic space.
-	 * @param w
-	 *            Width of this NApplet's graphic space.
-	 * @param h
-	 *            Height of this NApplet's graphic space.
 	 * @param sketchPath
 	 *            Path for this NApplet's home folder.
 	 */
-	public void nappletInit(PApplet pap, int x, int y, int w, int h,
-			String sketchPath) {
+	public void nappletInit(PApplet pap, int x, int y, String sketchPath) {
 
 		parentPApplet = pap;
 
@@ -100,18 +95,62 @@ public class NApplet extends PApplet {
 		online = parentPApplet.online;
 
 		this.sketchPath = sketchPath;
-
-		g = makeGraphics(w, h, getSketchRenderer(), null, true);
-
-		width = g.width;
-		height = g.height;
 		nappletX = x;
 		nappletY = y;
 		embeddedNapplet = true;
 	}
 
 	/**
-	 * Accessor for queueing mouse events. Used by the NAppletManager.
+	 * Used to initialize an embedded NApplet. Replaces the call to init().
+	 * 
+	 * @param pap
+	 *            Parent PApplet (or NApplet)
+	 * @param x
+	 *            x-coordinate of top-left corner of this NApplet's area within
+	 *            the parent's graphic space.
+	 * @param y
+	 *            y-coordinate of top-left corner of this NApplet's area within
+	 *            the parent's graphic space.
+	 */
+	public void nappletInit(PApplet pap, int x, int y) {
+		nappletInit(pap, x, y, pap.sketchPath);
+	}
+
+	/**
+	 * Initializes an embedded naplet with its top-left corner at (0,0) in the
+	 * parent's display.
+	 * 
+	 * @param pap
+	 *            ParentPApplet (or NApplet)
+	 */
+	public void nappletInit(PApplet pap) {
+		nappletInit(pap, 0, 0, pap.sketchPath);
+	}
+
+	public void size(final int iwidth, final int iheight, String irenderer,
+			String ipath) {
+		if (embeddedNapplet) {
+			if (g == null) {
+				g = makeGraphics(iwidth, iheight, irenderer, ipath, true);
+				width = iwidth;
+				height = iheight;
+			} else {
+				String currentRenderer = g.getClass().getName();
+				if (currentRenderer.equals(irenderer))
+					resizeRenderer(iwidth, iheight);
+				else {
+					g = makeGraphics(iwidth, iheight, irenderer, ipath, true);
+					width = iwidth;
+					height = iheight;
+				}
+			}
+		} else
+			super.size(iwidth, iheight, irenderer, ipath);
+	}
+
+	/**
+	 * Accessor for queueing mouse events. Used by the NAppletManager (since
+	 * enqueueMouseEvent() is protected.)
 	 * 
 	 * @param event
 	 *            Mouse event. This needs to be translated to the NApplet's
@@ -122,7 +161,8 @@ public class NApplet extends PApplet {
 	}
 
 	/**
-	 * Accessor for queueing keyboard events. Used by the NAppletManager.
+	 * Accessor for queueing keyboard events. Used by the NAppletManager (since
+	 * enqueueKeyEvent() is protected.)
 	 * 
 	 * @param event
 	 *            Keyboard event.

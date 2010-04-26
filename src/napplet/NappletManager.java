@@ -33,6 +33,7 @@ public class NAppletManager {
 	public void addNapplet(NApplet nap) {
 		nap.parentPApplet = parentPApplet;
 		nAppletList.add(nap);
+		nap.setup();
 	}
 
 	public NApplet containingNapplet(int x, int y) {

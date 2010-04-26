@@ -14,16 +14,16 @@ public class NAppletTest extends PApplet {
 		size(300, 300);
 		nAppletManager = new NAppletManager(this);
 		nap = new MouseBlock();
-		nap.nappletInit(this, 25, 25, 100, 100, sketchPath);
+		nap.nappletInit(this, 25, 25, sketchPath);
 		nAppletManager.addNapplet(nap);
 		nap = new MouseBlock();
-		nap.nappletInit(this, 175, 175, 100, 100, sketchPath);
+		nap.nappletInit(this, 175, 175, sketchPath);
 		nAppletManager.addNapplet(nap);
 		nap = new SwingBlock();
-		nap.nappletInit(this, 25, 175, 100, 100, sketchPath);
+		nap.nappletInit(this, 25, 175, sketchPath);
 		nAppletManager.addNapplet(nap);
 		nap = new SwingBlock();
-		nap.nappletInit(this, 175, 25, 100, 100, sketchPath);
+		nap.nappletInit(this, 175, 25, sketchPath);
 		nAppletManager.addNapplet(nap);
 	}
 	
