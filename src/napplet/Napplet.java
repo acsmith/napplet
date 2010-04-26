@@ -7,7 +7,6 @@ import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
@@ -79,6 +78,10 @@ public class Napplet extends PApplet {
 		  embeddedNapplet = true;
 	  }
 	  
+	  public void init() {
+		  super.init();
+	  }
+	  
 	  /**
 	   * Called by the browser or applet viewer to inform this applet that it
 	   * should start its execution. It is called after the init method and
@@ -91,11 +94,12 @@ public class Napplet extends PApplet {
 	    // When running inside a browser, start() will be called when someone
 	    // returns to a page containing this applet.
 	    // http://dev.processing.org/bugs/show_bug.cgi?id=581
-	    finished = false;
-
-	    if (thread != null) return;
-	    thread = new Thread(this, "Animation Thread");
-	    thread.start();
+//	    finished = false;
+//
+//	    if (thread != null) return;
+//	    thread = new Thread(this, "Animation Thread");
+//	    thread.start();
+		  super.start();
 	  }
 
 
