@@ -11,17 +11,17 @@ import java.util.List;
 
 import processing.core.PApplet;
 
-public class NappletManager {
+public class NAppletManager {
 
-	List<Napplet> nappletList = new ArrayList<Napplet>();
+	List<NApplet> nAppletList = new ArrayList<NApplet>();
 
 	PApplet parentPApplet;
 
-	Napplet focusNapplet;
-	Napplet mouseNapplet;
+	NApplet focusNApplet;
+	NApplet mouseNApplet;
 	public int mouseX, mouseY;
 
-	public NappletManager(PApplet pap) {
+	public NAppletManager(PApplet pap) {
 		super();
 		parentPApplet = pap;
 		parentPApplet.registerPre(this);
@@ -30,21 +30,21 @@ public class NappletManager {
 		parentPApplet.registerKeyEvent(this);
 	}
 
-	public void addNapplet(Napplet nap) {
+	public void addNapplet(NApplet nap) {
 		nap.parentPApplet = parentPApplet;
-		nappletList.add(nap);
+		nAppletList.add(nap);
 	}
 
-	public Napplet containingNapplet(int x, int y) {
-		Napplet containingNapplet = null;
-		for (Napplet nap : nappletList) {
+	public NApplet containingNapplet(int x, int y) {
+		NApplet containingNApplet = null;
+		for (NApplet nap : nAppletList) {
 			int xRel = x - nap.nappletX;
 			int yRel = y - nap.nappletY;
 			if (xRel >= 0 && yRel >= 0 && xRel < nap.width && yRel < nap.height) {
-				containingNapplet = nap;
+				containingNApplet = nap;
 			}
 		}
-		return containingNapplet;
+		return containingNApplet;
 	}
 
 	public void pre() {
@@ -52,11 +52,11 @@ public class NappletManager {
 	}
 
 	public void draw() {
-		for (Napplet nap : nappletList)
+		for (NApplet nap : nAppletList)
 			nap.handleDraw();
 	}
 
-	void passMouseEvent(Napplet nap, MouseEvent event) {
+	void passMouseEvent(NApplet nap, MouseEvent event) {
 		event.translatePoint(-(nap.nappletX), -(nap.nappletY));
 		nap.passMouseEvent(event);
 	}
@@ -65,30 +65,30 @@ public class NappletManager {
 		mouseX = event.getX();
 		mouseY = event.getY();
 
-		Napplet nap = containingNapplet(mouseX, mouseY);
+		NApplet nap = containingNapplet(mouseX, mouseY);
 		if ((event.getID() == java.awt.event.MouseEvent.MOUSE_DRAGGED)
-				&& (mouseNapplet != null)) {
-			passMouseEvent(mouseNapplet, event);
+				&& (mouseNApplet != null)) {
+			passMouseEvent(mouseNApplet, event);
 		} else if (nap != null) {
 			passMouseEvent(nap, event);
-			mouseNapplet = nap;
-			if (nap != focusNapplet) {
+			mouseNApplet = nap;
+			if (nap != focusNApplet) {
 				FocusEvent gainFocus = new FocusEvent(nap, FOCUS_GAINED, false,
-						focusNapplet);
+						focusNApplet);
 				nap.focusGained(gainFocus);
-				if (focusNapplet!=null) {	
-					FocusEvent loseFocus = new FocusEvent(focusNapplet,
+				if (focusNApplet!=null) {	
+					FocusEvent loseFocus = new FocusEvent(focusNApplet,
 							FOCUS_LOST, false, nap);
-					focusNapplet.focusLost(loseFocus);
+					focusNApplet.focusLost(loseFocus);
 				}
-				focusNapplet = nap;
+				focusNApplet = nap;
 			}
 		}
 	}
 
 	public void keyEvent(KeyEvent event) {
-		if (focusNapplet != null) {
-			focusNapplet.passKeyEvent(event);
+		if (focusNApplet != null) {
+			focusNApplet.passKeyEvent(event);
 		}
 	}
 }

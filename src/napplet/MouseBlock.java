@@ -2,7 +2,7 @@ package napplet;
 
 
 @SuppressWarnings("serial")
-public class MouseBlock extends Napplet {
+public class MouseBlock extends NApplet {
 
 	public void setup() {
 		size(100, 100);

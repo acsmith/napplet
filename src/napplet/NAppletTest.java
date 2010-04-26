@@ -5,24 +5,24 @@ import processing.core.PApplet;
 @SuppressWarnings("serial")
 public class NAppletTest extends PApplet {
 
-	NappletManager nappletManager;
-	Napplet nap;
+	NAppletManager nAppletManager;
+	NApplet nap;
 	
 	public void setup() {
 		size(300, 300);
-		nappletManager = new NappletManager(this);
+		nAppletManager = new NAppletManager(this);
 		nap = new MouseBlock();
 		nap.nappletInit(this, 25, 25, 100, 100, sketchPath);
-		nappletManager.addNapplet(nap);
+		nAppletManager.addNapplet(nap);
 		nap = new MouseBlock();
 		nap.nappletInit(this, 175, 175, 100, 100, sketchPath);
-		nappletManager.addNapplet(nap);
+		nAppletManager.addNapplet(nap);
 		nap = new SwingBlock();
 		nap.nappletInit(this, 25, 175, 100, 100, sketchPath);
-		nappletManager.addNapplet(nap);
+		nAppletManager.addNapplet(nap);
 		nap = new SwingBlock();
 		nap.nappletInit(this, 175, 25, 100, 100, sketchPath);
-		nappletManager.addNapplet(nap);
+		nAppletManager.addNapplet(nap);
 	}
 	
 	public void draw() {

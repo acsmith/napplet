@@ -1,7 +1,7 @@
 package napplet;
 
 @SuppressWarnings("serial")
-public class SwingBlock extends Napplet {
+public class SwingBlock extends NApplet {
 
 	int fillShade = 0;
 	

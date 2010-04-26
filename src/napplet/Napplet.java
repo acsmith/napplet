@@ -7,7 +7,7 @@ import processing.core.PApplet;
 import processing.core.PImage;
 
 @SuppressWarnings( { "serial" })
-public class Napplet extends PApplet {
+public class NApplet extends PApplet {
 
 	/**
 	 * Time in milliseconds when the applet was started. We need to have our own
@@ -24,12 +24,33 @@ public class Napplet extends PApplet {
 
 	// New members for Napplet
 
-	PApplet parentPApplet;
+	/**
+	 * The PApplet (or NApplet) that this NApplet is displayed on, if any.
+	 */
+	PApplet parentPApplet = null;
+
+	/**
+	 * The x-position (in screen coordinates) of this NApplet's display space in
+	 * its parent's display.
+	 */
 	int nappletX;
+
+	/**
+	 * The y-position(in screen coordinates) of this NApplet's display space in
+	 * its parent's display.
+	 */
 	int nappletY;
+
+	/**
+	 * True if this NApplet is displaying in another PApplet's (or NApplet's)
+	 * display space, false if it's a standalone applet.
+	 */
 	boolean embeddedNapplet = false;
 
-	public Napplet() {
+	/**
+	 * Do-nothing constructor.  Use nappletInit() to initialize a NApplet.
+	 */
+	public NApplet() {
 	}
 
 	/**
@@ -117,22 +138,34 @@ public class Napplet extends PApplet {
 			super.paint();
 	}
 
-	// These next two need to be replaced with routines that work for embedded
-	// NApplets. Obviously delay() will only be manageable down to a resolution
-	// of 1/framerate, and framerate() may just not be possible to do in a
-	// non-crappy way.
-
+	/**
+	 * Overrides PApplet.delay(). For now, this just means delay() is disabled
+	 * for embedded NApplets. For standalone NApplets, this just passes through
+	 * to PApplet.delay().
+	 */
 	public void delay(int napTime) {
-		System.err.println("NApplet: delay() disabled.");
+		if (embeddedNapplet)
+			System.err.println("NApplet: delay() disabled.");
+		else
+			super.delay(napTime);
 	}
 
+	/**
+	 * Override for PApplet.frameRate(). Just disables frame rate setting for
+	 * embedded NApplets, and passes through to PApplet.frameRate() for
+	 * standalone NApplets.
+	 */
 	public void frameRate(float newRateTarget) {
-		System.err.println("NApplet: frameRate(float newRateTarget) disabled.");
+		if (embeddedNapplet)
+			System.err
+					.println("NApplet: frameRate(float newRateTarget) disabled.");
+		else
+			super.frameRate(newRateTarget);
 	}
 
 	// Disabled cursor manipulation for embedded NApplets for now. Will probably
-	// bring it back at some
-	// point, but it'll be tricky to manage it properly for embedded NApplets.
+	// bring it back at some point, but it'll be tricky to manage it properly
+	// for embedded NApplets.
 
 	public void cursor(int cursorType) {
 		if (embeddedNapplet)
