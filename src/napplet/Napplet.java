@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
@@ -79,9 +80,68 @@ public class Napplet extends PApplet {
 	  }
 	  
 	  public void init() {
-		  super.init();
+
+	    Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+	    screenWidth = screen.width;
+	    screenHeight = screen.height;
+
+	    millisOffset = System.currentTimeMillis();
+
+	    finished = false;
+
+	    looping = true;
+	    redraw = true;
+	    firstMouse = true;
+
+	    sizeMethods = new RegisteredMethods();
+	    preMethods = new RegisteredMethods();
+	    drawMethods = new RegisteredMethods();
+	    postMethods = new RegisteredMethods();
+	    mouseEventMethods = new RegisteredMethods();
+	    keyEventMethods = new RegisteredMethods();
+	    disposeMethods = new RegisteredMethods();
+
+	    try {
+	      getAppletContext();
+	      online = true;
+	    } catch (NullPointerException e) {
+	      online = false;
+	    }
+
+	    try {
+	      if (sketchPath == null) {
+	        sketchPath = System.getProperty("user.dir");
+	      }
+	    } catch (Exception e) { }  // may be a security problem
+
+	    Dimension size = getSize();
+	    if ((size.width != 0) && (size.height != 0)) {
+	      // When this PApplet is embedded inside a Java application with other
+	      // Component objects, its size() may already be set externally (perhaps
+	      // by a LayoutManager). In this case, honor that size as the default.
+	      // Size of the component is set, just create a renderer.
+	      g = makeGraphics(size.width, size.height, getSketchRenderer(), null, true);
+	      // This doesn't call setSize() or setPreferredSize() because the fact
+	      // that a size was already set means that someone is already doing it.
+
+	    } else {
+	      // Set the default size, until the user specifies otherwise
+	      this.defaultSize = true;
+	      int w = getSketchWidth();
+	      int h = getSketchHeight();
+	      g = makeGraphics(w, h, getSketchRenderer(), null, true);
+	      // Fire component resize event
+	      setSize(w, h);
+	      setPreferredSize(new Dimension(w, h));
+	    }
+	    width = g.width;
+	    height = g.height;
+
+	    addListeners();
+
 	  }
-	  
+
+
 	  /**
 	   * Called by the browser or applet viewer to inform this applet that it
 	   * should start its execution. It is called after the init method and
@@ -94,12 +154,11 @@ public class Napplet extends PApplet {
 	    // When running inside a browser, start() will be called when someone
 	    // returns to a page containing this applet.
 	    // http://dev.processing.org/bugs/show_bug.cgi?id=581
-//	    finished = false;
-//
-//	    if (thread != null) return;
-//	    thread = new Thread(this, "Animation Thread");
-//	    thread.start();
-		  super.start();
+	    finished = false;
+
+	    if (thread != null) return;
+	    thread = new Thread(this, "Animation Thread");
+	    thread.start();
 	  }
 
 
