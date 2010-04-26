@@ -1,5 +1,7 @@
-package napplet;
+package napplet.test;
 
+import napplet.NApplet;
+import napplet.NAppletManager;
 import processing.core.PApplet;
 
 @SuppressWarnings("serial")

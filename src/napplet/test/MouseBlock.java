@@ -1,4 +1,6 @@
-package napplet;
+package napplet.test;
+
+import napplet.NApplet;
 
 
 @SuppressWarnings("serial")

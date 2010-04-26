@@ -8,7 +8,13 @@ import processing.core.PImage;
 
 @SuppressWarnings( { "serial" })
 public class NApplet extends PApplet {
-
+	
+	public static final String VERSION = "0.1.0";
+	
+	public String version() {
+		return VERSION;
+	}
+	
 	/**
 	 * Time in milliseconds when the applet was started. We need to have our own
 	 * number for this since PApplet's millisOffset is private.
