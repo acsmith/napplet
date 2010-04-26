@@ -3,13 +3,13 @@ package napplet;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -78,29 +78,21 @@ public class Napplet extends PApplet {
 		embeddedNapplet = true;
 	}
 
+	public void passMouseEvent(MouseEvent event) {
+		this.enqueueMouseEvent(event);
+	}
+	
 	public void setup() {
 	}
 
 	public void draw() {
-		// if no draw method, then shut things down
-		// System.out.println("no draw method, goodbye");
 		finished = true;
 	}
 
-	// ////////////////////////////////////////////////////////////
-
-	// . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-	// .
-
-	public void update(Graphics screen) {
-		paint(screen);
-	}
-
-	// active paint method
 	protected void paint() {
 		if (embeddedNapplet) {
 			loadPixels();
-			parentPApplet.image(this.g, 50, 50);
+			parentPApplet.image(this.g, nappletX, nappletY);
 		} else
 			super.paint();
 	}
