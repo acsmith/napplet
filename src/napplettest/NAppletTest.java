@@ -1,4 +1,4 @@
-package napplet.test;
+package napplettest;
 
 import napplet.NApplet;
 import napplet.NAppletManager;

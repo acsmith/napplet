@@ -278,8 +278,6 @@ public class NApplet extends PApplet {
 						+ nappletClassName);
 			} catch (ClassNotFoundException e1) {
 				String pcName = parent.getClass().getName();
-				System.out.println(pcName.substring(0, pcName.lastIndexOf('.'))
-						+ "." + nappletClassName);
 				try {
 					nappletClass = Class.forName(pcName.substring(0, pcName
 							.lastIndexOf('.'))
