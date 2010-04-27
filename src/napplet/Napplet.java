@@ -2,6 +2,7 @@ package napplet;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Constructor;
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -251,6 +252,71 @@ public class NApplet extends PApplet {
 					.println("NApplet: Cursor manipulation disabled for now.");
 		else
 			super.noCursor();
+	}
+
+	/**
+	 * NApplet factory method. 
+	 * 
+	 * @param parent
+	 *            Parent PApplet or NApplet for the new NApplet.
+	 * @param nappletClassName
+	 *            Name of the new NApplet's class.
+	 * @return The created NApplet.
+	 */
+	public static NApplet createNApplet(PApplet parent, String nappletClassName) {
+		Class<?> nappletClass = null;
+		Constructor<?> constructor = null;
+		Class<?>[] constructorParams = {};
+		Object[] constructorArgs = {};
+		NApplet napplet = null;
+
+		try {
+			nappletClass = Class.forName(nappletClassName);
+		} catch (ClassNotFoundException e) {
+			try {
+				nappletClass = Class.forName(parent.getClass().getName() + "$"
+						+ nappletClassName);
+			} catch (ClassNotFoundException e1) {
+				String pcName = parent.getClass().getName();
+				System.out.println(pcName.substring(0, pcName.lastIndexOf('.'))
+						+ "." + nappletClassName);
+				try {
+					nappletClass = Class.forName(pcName.substring(0, pcName
+							.lastIndexOf('.'))
+							+ "." + nappletClassName);
+				} catch (ClassNotFoundException e2) {
+					System.err
+							.println("NApplet.createNapplet(): Class not found.");
+					e2.printStackTrace();
+				}
+			}
+		}
+
+		if (nappletClass != null) {
+			if (nappletClass.getName().contains("$")) {
+				constructorParams = new Class[] { parent.getClass() };
+				constructorArgs = new Object[] { parent };
+			}
+			try {
+				constructor = nappletClass.getConstructor(constructorParams);
+			} catch (Exception e) {
+				System.err
+						.println("NApplet.createNApplet(): Constructor access error.");
+				e.printStackTrace();
+			}
+		}
+
+		if (constructor != null) {
+			try {
+				napplet = (NApplet) constructor.newInstance(constructorArgs);
+			} catch (Exception e) {
+				System.err
+						.println("NApplet.createNApplet(): Object instantiation error.");
+				e.printStackTrace();
+			}
+		}
+
+		return napplet;
 	}
 
 }

@@ -92,4 +92,13 @@ public class NAppletManager {
 			focusNApplet.passKeyEvent(event);
 		}
 	}
+	
+	public void createNApplet(String nappletClassName, int x, int y) {
+		
+		NApplet nap = NApplet.createNApplet(parentPApplet, nappletClassName);
+		if (nap!=null) {
+			nap.nappletInit(parentPApplet, x, y);
+			addNapplet(nap);
+		}
+	}
 }
