@@ -88,8 +88,16 @@ public class NApplet extends PApplet {
 		this.sketchPath = sketchPath;
 		nappletX = x;
 		nappletY = y;
+		{
+			this.defaultSize = true;
+			int w = getSketchWidth();
+			int h = getSketchHeight();
+			g = makeGraphics(w, h, getSketchRenderer(), null, true);
+			setSize(w, h);
+			setPreferredSize(new Dimension(w, h));
+		}
 	}
-	
+
 	/**
 	 * Used to initialize an embedded NApplet. Replaces the call to init().
 	 * 
@@ -113,6 +121,8 @@ public class NApplet extends PApplet {
 		screenHeight = parentPApplet.height;
 
 		embeddedNApplet = true;
+
+		setup();
 	}
 
 	public void initWindowedNApplet(PApplet pap, int x, int y, String sketchPath) {
@@ -125,20 +135,9 @@ public class NApplet extends PApplet {
 		
 		embeddedNApplet = false;
 
-		{
-			// Set the default size, until the user specifies otherwise
-			this.defaultSize = true;
-			int w = getSketchWidth();
-			int h = getSketchHeight();
-			g = makeGraphics(w, h, getSketchRenderer(), null, true);
-			// Fire component resize event
-			setSize(w, h);
-			setPreferredSize(new Dimension(w, h));
-		}
-		width = g.width;
-		height = g.height;
-		
 		addListeners();
+		
+		setup();
 
 	}
 	
@@ -186,8 +185,12 @@ public class NApplet extends PApplet {
 					height = iheight;
 				}
 			}
-		} else
+		} else {
+			setSize(iwidth, iheight);
+			setPreferredSize(new Dimension(iwidth, iheight));
+			
 			super.size(iwidth, iheight, irenderer, ipath);
+		}
 	}
 
 	/**
