@@ -13,10 +13,10 @@ public class NAppletTest extends PApplet {
 	public void setup() {
 		size(300, 300);
 		nAppletManager = new NAppletManager(this);
-		nAppletManager.createNApplet("MouseBlock", 25, 25);
-		nAppletManager.createNApplet("MouseBlock", 175, 175);
-		nAppletManager.createNApplet("SwingBlock", 25, 175);
-		nAppletManager.createNApplet("SwingBlock", 175, 25);
+		nAppletManager.createEmbeddedNApplet("MouseBlock", 25, 25);
+		nAppletManager.createEmbeddedNApplet("SwingBlock", 175, 25);
+		
+		nAppletManager.createWindowedNApplet("SwingBlock", 500, 300);
 	}
 	
 	public void draw() {

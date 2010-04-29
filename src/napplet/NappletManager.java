@@ -30,7 +30,7 @@ public class NAppletManager {
 		parentPApplet.registerKeyEvent(this);
 	}
 
-	public void addNapplet(NApplet nap) {
+	public void addNApplet(NApplet nap) {
 		nap.parentPApplet = parentPApplet;
 		nAppletList.add(nap);
 		nap.setup();
@@ -39,10 +39,12 @@ public class NAppletManager {
 	public NApplet containingNapplet(int x, int y) {
 		NApplet containingNApplet = null;
 		for (NApplet nap : nAppletList) {
-			int xRel = x - nap.nappletX;
-			int yRel = y - nap.nappletY;
-			if (xRel >= 0 && yRel >= 0 && xRel < nap.width && yRel < nap.height) {
-				containingNApplet = nap;
+			if (nap.embeddedNApplet) { 
+				int xRel = x - nap.nappletX;
+				int yRel = y - nap.nappletY;
+				if (xRel >= 0 && yRel >= 0 && xRel < nap.width && yRel < nap.height) {
+					containingNApplet = nap;
+				}
 			}
 		}
 		return containingNApplet;
@@ -94,11 +96,29 @@ public class NAppletManager {
 	}
 	
 	public void createNApplet(String nappletClassName, int x, int y) {
-		
+		createEmbeddedNApplet(nappletClassName, x, y);
+	}
+	
+	public void createEmbeddedNApplet(String nappletClassName, int x, int y) {
 		NApplet nap = NApplet.createNApplet(parentPApplet, nappletClassName);
 		if (nap!=null) {
-			nap.nappletInit(parentPApplet, x, y);
-			addNapplet(nap);
+			nap.initEmbeddedNApplet(parentPApplet, x, y);
+			addNApplet(nap);
 		}
 	}
+	
+	public void createWindowedNApplet(String nappletClassName, int x, int y) {
+		NApplet nap = NApplet.createNApplet(parentPApplet, nappletClassName);
+		if (nap!=null) {
+			@SuppressWarnings("unused")
+			NFrame nFrame = new NFrame(parentPApplet, nap, x, y);
+			addNApplet(nap);
+		}
+	}
+	
+	
+	
+	
+	
+	
 }

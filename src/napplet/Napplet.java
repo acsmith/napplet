@@ -1,5 +1,7 @@
 package napplet;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Constructor;
@@ -52,34 +54,22 @@ public class NApplet extends PApplet {
 	 * True if this NApplet is displaying in another PApplet's (or NApplet's)
 	 * display space, false if it's a standalone applet.
 	 */
-	boolean embeddedNapplet = false;
-
+	boolean embeddedNApplet = false;
+	
 	/**
 	 * Do-nothing constructor. Use nappletInit() to initialize a NApplet.
 	 */
 	public NApplet() {
 	}
 
-	/**
-	 * Used to initialize an embedded NApplet. Replaces the call to init().
-	 * 
-	 * @param pap
-	 *            Parent PApplet (or NApplet)
-	 * @param x
-	 *            x-coordinate of top-left corner of this NApplet's area within
-	 *            the parent's graphic space.
-	 * @param y
-	 *            y-coordinate of top-left corner of this NApplet's area within
-	 *            the parent's graphic space.
-	 * @param sketchPath
-	 *            Path for this NApplet's home folder.
-	 */
-	public void nappletInit(PApplet pap, int x, int y, String sketchPath) {
-
+	protected void initNApplet(PApplet pap, int x, int y, String sketchPath) {
 		parentPApplet = pap;
 
+		// Have to do this because PApplet.millisOffset is private.
 		millisOffset = parentPApplet.millis();
-
+		
+		// Everything else is basically just transplanted initialization stuff
+		// from PApplet.init().
 		finished = false;
 		looping = true;
 		redraw = true;
@@ -98,9 +88,60 @@ public class NApplet extends PApplet {
 		this.sketchPath = sketchPath;
 		nappletX = x;
 		nappletY = y;
-		embeddedNapplet = true;
+	}
+	
+	/**
+	 * Used to initialize an embedded NApplet. Replaces the call to init().
+	 * 
+	 * @param pap
+	 *            Parent PApplet (or NApplet)
+	 * @param x
+	 *            x-coordinate of top-left corner of this NApplet's area within
+	 *            the parent's graphic space.
+	 * @param y
+	 *            y-coordinate of top-left corner of this NApplet's area within
+	 *            the parent's graphic space.
+	 * @param sketchPath
+	 *            Path for this NApplet's home folder.
+	 */
+	public void initEmbeddedNApplet(PApplet pap, int x, int y, String sketchPath) {
+
+		initNApplet(pap, x, y, sketchPath);
+		
+		// Use the parent's size as the "screen size" for this applet.
+		screenWidth = parentPApplet.width;
+		screenHeight = parentPApplet.height;
+
+		embeddedNApplet = true;
 	}
 
+	public void initWindowedNApplet(PApplet pap, int x, int y, String sketchPath) {
+
+		initNApplet(pap, x, y, sketchPath);
+		
+		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+	    screenWidth = screen.width;
+	    screenHeight = screen.height; 
+		
+		embeddedNApplet = false;
+
+		{
+			// Set the default size, until the user specifies otherwise
+			this.defaultSize = true;
+			int w = getSketchWidth();
+			int h = getSketchHeight();
+			g = makeGraphics(w, h, getSketchRenderer(), null, true);
+			// Fire component resize event
+			setSize(w, h);
+			setPreferredSize(new Dimension(w, h));
+		}
+		width = g.width;
+		height = g.height;
+		
+		addListeners();
+
+	}
+	
 	/**
 	 * Used to initialize an embedded NApplet. Replaces the call to init().
 	 * 
@@ -113,24 +154,24 @@ public class NApplet extends PApplet {
 	 *            y-coordinate of top-left corner of this NApplet's area within
 	 *            the parent's graphic space.
 	 */
-	public void nappletInit(PApplet pap, int x, int y) {
-		nappletInit(pap, x, y, pap.sketchPath);
+	public void initEmbeddedNApplet(PApplet pap, int x, int y) {
+		initEmbeddedNApplet(pap, x, y, pap.sketchPath);
 	}
 
 	/**
-	 * Initializes an embedded naplet with its top-left corner at (0,0) in the
+	 * Initializes an embedded NApplet with its top-left corner at (0,0) in the
 	 * parent's display.
 	 * 
 	 * @param pap
 	 *            ParentPApplet (or NApplet)
 	 */
-	public void nappletInit(PApplet pap) {
-		nappletInit(pap, 0, 0, pap.sketchPath);
+	public void initEmbeddedNApplet(PApplet pap) {
+		initEmbeddedNApplet(pap, 0, 0, pap.sketchPath);
 	}
 
 	public void size(final int iwidth, final int iheight, String irenderer,
 			String ipath) {
-		if (embeddedNapplet) {
+		if (embeddedNApplet) {
 			if (g == null) {
 				g = makeGraphics(iwidth, iheight, irenderer, ipath, true);
 				width = iwidth;
@@ -150,8 +191,8 @@ public class NApplet extends PApplet {
 	}
 
 	/**
-	 * Accessor for queueing mouse events. Used by the NAppletManager (since
-	 * enqueueMouseEvent() is protected.)
+	 * Accessor for queueing mouse events. Used by the NAppletManager since
+	 * PApplet.enqueueMouseEvent() is protected.
 	 * 
 	 * @param event
 	 *            Mouse event. This needs to be translated to the NApplet's
@@ -162,8 +203,8 @@ public class NApplet extends PApplet {
 	}
 
 	/**
-	 * Accessor for queueing keyboard events. Used by the NAppletManager (since
-	 * enqueueKeyEvent() is protected.)
+	 * Accessor for queueing keyboard events. Used by the NAppletManager since
+	 * PApplet.enqueueKeyEvent() is protected.
 	 * 
 	 * @param event
 	 *            Keyboard event.
@@ -178,7 +219,7 @@ public class NApplet extends PApplet {
 	 * display. Otherwise, just falls through to PApplet.paint().
 	 */
 	protected void paint() {
-		if (embeddedNapplet) {
+		if (embeddedNApplet) {
 			loadPixels();
 			parentPApplet.image(this.g, nappletX, nappletY);
 		} else
@@ -191,7 +232,7 @@ public class NApplet extends PApplet {
 	 * to PApplet.delay().
 	 */
 	public void delay(int napTime) {
-		if (embeddedNapplet)
+		if (embeddedNApplet)
 			System.err.println("NApplet: delay() disabled.");
 		else
 			super.delay(napTime);
@@ -203,7 +244,7 @@ public class NApplet extends PApplet {
 	 * standalone NApplets.
 	 */
 	public void frameRate(float newRateTarget) {
-		if (embeddedNapplet)
+		if (embeddedNApplet)
 			System.err
 					.println("NApplet: frameRate(float newRateTarget) disabled.");
 		else
@@ -215,7 +256,7 @@ public class NApplet extends PApplet {
 	// for embedded NApplets.
 
 	public void cursor(int cursorType) {
-		if (embeddedNapplet)
+		if (embeddedNApplet)
 			System.err
 					.println("NApplet: Cursor manipulation disabled for now.");
 		else
@@ -223,7 +264,7 @@ public class NApplet extends PApplet {
 	}
 
 	public void cursor(PImage image) {
-		if (embeddedNapplet)
+		if (embeddedNApplet)
 			System.err
 					.println("NApplet: Cursor manipulation disabled for now.");
 		else
@@ -231,7 +272,7 @@ public class NApplet extends PApplet {
 	}
 
 	public void cursor(PImage image, int hotspotX, int hotspotY) {
-		if (embeddedNapplet)
+		if (embeddedNApplet)
 			System.err
 					.println("NApplet: Cursor manipulation disabled for now.");
 		else
@@ -239,7 +280,7 @@ public class NApplet extends PApplet {
 	}
 
 	public void cursor() {
-		if (embeddedNapplet)
+		if (embeddedNApplet)
 			System.err
 					.println("NApplet: Cursor manipulation disabled for now.");
 		else
@@ -247,7 +288,7 @@ public class NApplet extends PApplet {
 	}
 
 	public void noCursor() {
-		if (embeddedNapplet)
+		if (embeddedNApplet)
 			System.err
 					.println("NApplet: Cursor manipulation disabled for now.");
 		else
@@ -255,7 +296,7 @@ public class NApplet extends PApplet {
 	}
 
 	/**
-	 * NApplet factory method. 
+	 * NApplet factory method.
 	 * 
 	 * @param parent
 	 *            Parent PApplet or NApplet for the new NApplet.
