@@ -41,22 +41,22 @@
 	<property name="libraryName"  value="napplet"/>
 	
 <!-- #### (8) give your library a name. edit value.   #### -->
-	<property name="versionNumber"  value="0.1.0"/>
+	<property name="versionNumber"  value="0.2.0"/>
 	
 <!-- #### (9) your contact url. edit value. #### -->
 	<property name="yourLink"  value="http://www.processing.org" />
 	
 <!-- #### (10) a comma separated list of keywords describing your library. edit value. #### -->
-	<property name="keywords"  value="?" />
+	<property name="keywords"  value="windowing" />
 	
 <!-- #### (11) a comma separated list of platforms the library has been tested. edit value. #### -->
-	<property name="tested:platform"  value="?" />
+	<property name="tested:platform"  value="Win XP" />
 	
 <!-- #### (12) the processing version this library has been tested with. edit value. #### -->
-	<property name="tested:processingVersion"  value="?" />
+	<property name="tested:processingVersion"  value="1.1" />
 	
 <!-- #### (13) does the library depend on any other library, dll, jnilib, etc. edit value. #### -->
-	<property name="tested:dependencies"  value="?" />
+	<property name="tested:dependencies"  value="" />
 	
 <!-- #### (14) where can the source code be found? edit value. #### -->
 	<property name="source:host"  value="github" />
@@ -130,15 +130,16 @@
   	
   	<!-- build the structure for ${dist} -->
   	<mkdir dir="${dist}" />
-  	<mkdir dir="${dist}/library" />
-  	<mkdir dir="${dist}/examples" />
-  	<mkdir dir="${dist}/reference" />
-  	<mkdir dir="${dist}/src" />
-  	<jar jarfile="${dist}/library/${jarFile}" basedir="${bin}"/>
-  	<copy todir="${dist}/examples">
+  	<mkdir dir="${dist}/${libraryName}" />
+  	<mkdir dir="${dist}/${libraryName}/library" />
+  	<mkdir dir="${dist}/${libraryName}/examples" />
+  	<mkdir dir="${dist}/${libraryName}/reference" />
+  	<mkdir dir="${dist}/${libraryName}/src" />
+  	<jar jarfile="${dist}/${libraryName}/library/${jarFile}" basedir="${bin}"/>
+  	<copy todir="${dist}/${libraryName}/examples">
   		<fileset dir="examples"/>
   	</copy>
-  	<copy todir="${dist}/src">
+  	<copy todir="${dist}/${libraryName}/src">
   		<fileset dir="src"/>
   	</copy> 
   	
@@ -159,18 +160,18 @@
 		</fileset>
  	</javadoc>
  	
-	<copy todir="${dist}/reference">
+	<copy todir="${dist}/${libraryName}/reference">
 		<fileset dir="${reference}" />
 	</copy>
   	
   	  	<!-- copy the jar file to processing's libraries -->
   	  	<mkdir dir="${processing}/${libraryName}" />
   		<copy todir="${processing}/${libraryName}">
-  			<fileset dir="${dist}"/>
+  			<fileset dir="${dist}/${libraryName}"/>
   		</copy> 
 
   	<!-- zip the distribution of the library -->
-  	<zip destfile="${dist}/${libraryName}.zip"
+  	<zip destfile="${dist}/${libraryName}-${versionNumber}.zip"
   	       basedir="${dist}"
   	       excludes="**/_DS.Store"
 	/>
@@ -180,14 +181,14 @@
   	<!-- organize the ${dist} folder -->
   	<mkdir dir="${dist}/web" />
   	<move todir="${dist}/web/reference">
-  		<fileset dir="${dist}/reference" />
+  		<fileset dir="${dist}/${libraryName}/reference" />
   	</move>
   	
   	<move todir="${dist}/web/examples">
-  		<fileset dir="${dist}/examples" />
+  		<fileset dir="${dist}/${libraryName}/examples" />
   	</move>
   	
-  	<delete dir="${dist}/library" />
+  	<delete dir="${dist}/${libraryName}/library" />
   	
   	<copy todir="${dist}/web">
   		<fileset dir="web" />
@@ -270,7 +271,7 @@
   	  	  						
   	<!-- finish organizating library's distribution -->
   	<mkdir dir="${dist}/web/download" />
-  	<copy file="${dist}/${libraryName}.zip" todir="${dist}/web/download" />
+  	<copy file="${dist}/${libraryName}-${versionNumber}.zip" todir="${dist}/web/download" />
   	
   	<copy todir="${processing}/${libraryName}/reference">
 		<fileset dir="${reference}" />
