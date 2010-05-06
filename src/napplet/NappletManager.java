@@ -2,6 +2,7 @@ package napplet;
 
 import static java.awt.event.FocusEvent.FOCUS_GAINED;
 import static java.awt.event.FocusEvent.FOCUS_LOST;
+import static processing.core.PConstants.ARGB;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
@@ -101,25 +102,29 @@ public class NAppletManager {
 		}
 	}
 	
-	public void createNApplet(String nappletClassName, int x, int y) {
-		createEmbeddedNApplet(nappletClassName, x, y);
+	public NApplet createNApplet(String nappletClassName, int x, int y) {
+		return createEmbeddedNApplet(nappletClassName, x, y);
 	}
 	
-	public void createEmbeddedNApplet(String nappletClassName, int x, int y) {
+	public NApplet createEmbeddedNApplet(String nappletClassName, int x, int y) {
 		NApplet nap = NApplet.createNApplet(parentPApplet, nappletClassName, this);
 		if (nap!=null) {
 			nap.initEmbeddedNApplet(parentPApplet, x, y);
 			addNApplet(nap);
+			nap.g.setPrimary(false);
+			nap.g.format = ARGB;
 		}
+		return nap;
 	}
 	
-	public void createWindowedNApplet(String nappletClassName, int x, int y) {
+	public NApplet createWindowedNApplet(String nappletClassName, int x, int y) {
 		NApplet nap = NApplet.createNApplet(parentPApplet, nappletClassName, this);
 		if (nap!=null) {
 			@SuppressWarnings("unused")
 			NFrame nFrame = new NFrame(parentPApplet, nap, x, y);
 			addNApplet(nap);
 		}
+		return nap;
 	}
 	
 	public void killNApplet(NApplet napplet) {

@@ -262,7 +262,7 @@ public class NApplet extends PApplet {
 			String ipath) {
 		if (embeddedNApplet) {
 			if (g == null) {
-				g = makeGraphics(iwidth, iheight, irenderer, ipath, true);
+				g = makeGraphics(iwidth, iheight, irenderer, ipath, false);
 				width = iwidth;
 				height = iheight;
 			} else {

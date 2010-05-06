@@ -11,7 +11,7 @@ public class SwingBlock extends NApplet {
 	public void setup() {
 		size(100, 100);
 		nappletCloseable = true;
-		nappletTint = 0x80ffffff;
+		nappletTint = 0xffffffff;
 	}
 	
 	public void draw() {
@@ -22,7 +22,7 @@ public class SwingBlock extends NApplet {
 				show();
 			}
 		}
-		background(0, 0, 0, 125);
+		background(0, 0);
 		stroke(255);
 		fill(fillShade);
 		translate(width/2, height/2);
