@@ -11,6 +11,7 @@ public class SwingBlock extends NApplet {
 	public void setup() {
 		size(100, 100);
 		nappletCloseable = true;
+		nappletTint = 0x80ffffff;
 	}
 	
 	public void draw() {

@@ -88,6 +88,8 @@ public class NApplet extends PApplet {
 	 */
 	public boolean nappletCloseable = false;
 
+	public int nappletTint = 0xffffffff;
+	
 	/**
 	 * Do-nothing constructor. Use initEmbeddedNApplet() or
 	 * initWindowedNApplet() to initialize a NApplet.
@@ -313,6 +315,7 @@ public class NApplet extends PApplet {
 		if (embeddedNApplet) {
 			if (!nappletHidden) {
 				loadPixels();
+				parentPApplet.tint(nappletTint);
 				parentPApplet.image(this.g, nappletX, nappletY);
 			}
 		} else

@@ -14,7 +14,8 @@ import processing.core.PApplet;
 public class NAppletManager {
 
 	List<NApplet> nAppletList = new ArrayList<NApplet>();
-
+	List<NApplet> killList = new ArrayList<NApplet>();
+	
 	PApplet parentPApplet;
 
 	NApplet focusNApplet;
@@ -53,11 +54,14 @@ public class NAppletManager {
 	public void pre() {
 
 	}
-
+	
 	public void draw() {
-		for (int i = nAppletList.size() - 1; i >=0 ; --i) {
-			NApplet nap = nAppletList.get(i);
+		for (NApplet nap : nAppletList) {
 			nap.runFrame();
+		}
+		while (killList.size()>0) {
+			nAppletList.remove(killList.get(0));
+			killList.remove(0);
 		}
 	}
 
@@ -119,7 +123,7 @@ public class NAppletManager {
 	}
 	
 	public void killNApplet(NApplet napplet) {
-		nAppletList.remove(napplet);
+		killList.add(napplet);
 	}
 	
 }
