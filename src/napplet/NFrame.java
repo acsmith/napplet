@@ -15,6 +15,7 @@ public class NFrame extends Frame {
 		napplet.initWindowedNApplet(pap, x, y, pap.sketchPath);
 		add(napplet);
 		napplet.frame = this;
+		napplet.setupNAppletMessages();
 		setVisible(true);
 		java.awt.Insets insets = getInsets();
 		setBounds(x, y, napplet.width + (insets.left + insets.right),

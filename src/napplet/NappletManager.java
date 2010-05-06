@@ -55,8 +55,10 @@ public class NAppletManager {
 	}
 
 	public void draw() {
-		for (NApplet nap : nAppletList)
-			nap.handleDraw();
+		for (int i = nAppletList.size() - 1; i >=0 ; --i) {
+			NApplet nap = nAppletList.get(i);
+			nap.runFrame();
+		}
 	}
 
 	void passMouseEvent(NApplet nap, MouseEvent event) {
@@ -100,7 +102,7 @@ public class NAppletManager {
 	}
 	
 	public void createEmbeddedNApplet(String nappletClassName, int x, int y) {
-		NApplet nap = NApplet.createNApplet(parentPApplet, nappletClassName);
+		NApplet nap = NApplet.createNApplet(parentPApplet, nappletClassName, this);
 		if (nap!=null) {
 			nap.initEmbeddedNApplet(parentPApplet, x, y);
 			addNApplet(nap);
@@ -108,7 +110,7 @@ public class NAppletManager {
 	}
 	
 	public void createWindowedNApplet(String nappletClassName, int x, int y) {
-		NApplet nap = NApplet.createNApplet(parentPApplet, nappletClassName);
+		NApplet nap = NApplet.createNApplet(parentPApplet, nappletClassName, this);
 		if (nap!=null) {
 			@SuppressWarnings("unused")
 			NFrame nFrame = new NFrame(parentPApplet, nap, x, y);
@@ -116,9 +118,8 @@ public class NAppletManager {
 		}
 	}
 	
-	
-	
-	
-	
+	public void killNApplet(NApplet napplet) {
+		nAppletList.remove(napplet);
+	}
 	
 }

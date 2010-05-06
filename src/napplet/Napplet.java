@@ -4,11 +4,19 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.lang.reflect.Constructor;
 
 import processing.core.PApplet;
 import processing.core.PImage;
 
+/**
+ * Subclass of processing.core.PApplet (Processing main sketch class.)
+ * 
+ * @author acsmith
+ * 
+ */
 @SuppressWarnings( { "serial" })
 public class NApplet extends PApplet {
 
@@ -36,28 +44,53 @@ public class NApplet extends PApplet {
 	/**
 	 * The PApplet (or NApplet) that this NApplet is displayed on, if any.
 	 */
-	PApplet parentPApplet = null;
+	public PApplet parentPApplet = null;
 
 	/**
-	 * The x-position (in screen coordinates) of this NApplet's display space in
-	 * its parent's display.
+	 * The manager for this NApplet. Remains null if this NApplet is being run
+	 * on its own, otherwise the manager will set it.
 	 */
-	int nappletX;
+	public NAppletManager nappletManager = null;
 
 	/**
-	 * The y-position(in screen coordinates) of this NApplet's display space in
-	 * its parent's display.
+	 * The x-position of this NApplet's display space in its parent's display,
+	 * or the x-position of the NApplet's window on the screen.
 	 */
-	int nappletY;
+	public int nappletX;
+
+	/**
+	 * The y-position of this NApplet's display space in its parent's display,
+	 * or the y-position of the NApplet's window on the screen.
+	 */
+	public int nappletY;
 
 	/**
 	 * True if this NApplet is displaying in another PApplet's (or NApplet's)
-	 * display space, false if it's a standalone applet.
+	 * display space, false if it's a stand-alone applet or in its own window.
 	 */
-	boolean embeddedNApplet = false;
-	
+	public boolean embeddedNApplet = false;
+
 	/**
-	 * Do-nothing constructor. Use nappletInit() to initialize a NApplet.
+	 * True if this NApplet is in its own window as a sub-sketch of another
+	 * sketch, but not running by itself.
+	 */
+	public boolean windowedNApplet = false;
+
+	/**
+	 * True if this NApplet has been hidden with the hide() method. Set to false
+	 * after un-hidden with show().
+	 */
+	public boolean nappletHidden = false;
+
+	/**
+	 * True if the user can close the NApplet through the normal window-closing
+	 * controls (whatever those may be).
+	 */
+	public boolean nappletCloseable = false;
+
+	/**
+	 * Do-nothing constructor. Use initEmbeddedNApplet() or
+	 * initWindowedNApplet() to initialize a NApplet.
 	 */
 	public NApplet() {
 	}
@@ -67,7 +100,7 @@ public class NApplet extends PApplet {
 
 		// Have to do this because PApplet.millisOffset is private.
 		millisOffset = parentPApplet.millis();
-		
+
 		// Everything else is basically just transplanted initialization stuff
 		// from PApplet.init().
 		finished = false;
@@ -115,7 +148,7 @@ public class NApplet extends PApplet {
 	public void initEmbeddedNApplet(PApplet pap, int x, int y, String sketchPath) {
 
 		initNApplet(pap, x, y, sketchPath);
-		
+
 		// Use the parent's size as the "screen size" for this applet.
 		screenWidth = parentPApplet.width;
 		screenHeight = parentPApplet.height;
@@ -125,22 +158,33 @@ public class NApplet extends PApplet {
 		setup();
 	}
 
+	/**
+	 * Used to initialize a windowed NApplet. Replaces the call to init().
+	 * 
+	 * @param pap
+	 *            Parent PApplet (or NApplet)
+	 * @param x
+	 *            x-coordinate of top-left corner of this NApplet's window.
+	 * @param y
+	 *            y-coordinate of top-left corner of this NApplet's window.
+	 * @param sketchPath
+	 *            Path for this NApplet's home folder.
+	 */
 	public void initWindowedNApplet(PApplet pap, int x, int y, String sketchPath) {
 
 		initNApplet(pap, x, y, sketchPath);
-		
+
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-	    screenWidth = screen.width;
-	    screenHeight = screen.height; 
-		
-		embeddedNApplet = false;
+		screenWidth = screen.width;
+		screenHeight = screen.height;
+
+		windowedNApplet = true;
 
 		addListeners();
-		
 		setup();
 
 	}
-	
+
 	/**
 	 * Used to initialize an embedded NApplet. Replaces the call to init().
 	 * 
@@ -168,6 +212,50 @@ public class NApplet extends PApplet {
 		initEmbeddedNApplet(pap, 0, 0, pap.sketchPath);
 	}
 
+	/**
+	 * Allow for user closing of windowed NApplets.
+	 */
+	public void setupNAppletMessages() {
+		if (windowedNApplet)
+			frame.addWindowListener(new WindowAdapter() {
+				public void windowClosing(WindowEvent e) {
+					userWindowClose();
+				}
+			});
+	}
+
+	public void runFrame() {
+
+		handleDraw();
+	}
+
+	public void hide() {
+		if (frame != null) {
+			frame.setVisible(false);
+		}
+		nappletHidden = true;
+	}
+
+	public void show() {
+		if (frame != null) {
+			frame.setVisible(true);
+		}
+		nappletHidden = false;
+	}
+
+	public void userWindowClose() {
+		if (nappletCloseable)
+			exit();
+	}
+
+	public void exit() {
+		if (embeddedNApplet || windowedNApplet) {
+			frame.dispose();
+			nappletManager.killNApplet(this);
+		} else
+			super.exit();
+	}
+
 	public void size(final int iwidth, final int iheight, String irenderer,
 			String ipath) {
 		if (embeddedNApplet) {
@@ -188,7 +276,7 @@ public class NApplet extends PApplet {
 		} else {
 			setSize(iwidth, iheight);
 			setPreferredSize(new Dimension(iwidth, iheight));
-			
+
 			super.size(iwidth, iheight, irenderer, ipath);
 		}
 	}
@@ -223,8 +311,10 @@ public class NApplet extends PApplet {
 	 */
 	protected void paint() {
 		if (embeddedNApplet) {
-			loadPixels();
-			parentPApplet.image(this.g, nappletX, nappletY);
+			if (!nappletHidden) {
+				loadPixels();
+				parentPApplet.image(this.g, nappletX, nappletY);
+			}
 		} else
 			super.paint();
 	}
@@ -235,7 +325,7 @@ public class NApplet extends PApplet {
 	 * to PApplet.delay().
 	 */
 	public void delay(int napTime) {
-		if (embeddedNApplet)
+		if (embeddedNApplet || windowedNApplet)
 			System.err.println("NApplet: delay() disabled.");
 		else
 			super.delay(napTime);
@@ -247,7 +337,7 @@ public class NApplet extends PApplet {
 	 * standalone NApplets.
 	 */
 	public void frameRate(float newRateTarget) {
-		if (embeddedNApplet)
+		if (embeddedNApplet || windowedNApplet)
 			System.err
 					.println("NApplet: frameRate(float newRateTarget) disabled.");
 		else
@@ -307,7 +397,8 @@ public class NApplet extends PApplet {
 	 *            Name of the new NApplet's class.
 	 * @return The created NApplet.
 	 */
-	public static NApplet createNApplet(PApplet parent, String nappletClassName) {
+	public static NApplet createNApplet(PApplet parent,
+			String nappletClassName, NAppletManager nappletManager) {
 		Class<?> nappletClass = null;
 		Constructor<?> constructor = null;
 		Class<?>[] constructorParams = {};
@@ -358,6 +449,7 @@ public class NApplet extends PApplet {
 			}
 		}
 
+		napplet.nappletManager = nappletManager;
 		return napplet;
 	}
 
