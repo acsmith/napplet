@@ -78,11 +78,9 @@ public class NibbleManager {
 		Nibble nib = containingNibble(mouseX, mouseY);
 		if ((event.getID() == java.awt.event.MouseEvent.MOUSE_DRAGGED)
 				&& (mouseNibble != null)) {
-			if (mouseNibble instanceof NApplet)
-				passMouseEvent((NApplet) mouseNibble, event);
+			passMouseEvent((NApplet) mouseNibble, event);
 		} else if (nib != null) {
-			if (nib instanceof NApplet)
-				passMouseEvent((NApplet) nib, event);
+			passMouseEvent((NApplet) nib, event);
 			mouseNibble = nib;
 			if (nib != focusNibble) {
 				Nibble focusGainingNApplet = (nib instanceof NApplet) ? nib
@@ -108,8 +106,7 @@ public class NibbleManager {
 
 	public void keyEvent(KeyEvent event) {
 		if (focusNibble != null) {
-			if (focusNibble instanceof NApplet)
-				((NApplet) focusNibble).passKeyEvent(event);
+			focusNibble.passKeyEvent(event);
 		}
 	}
 

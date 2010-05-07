@@ -1,5 +1,8 @@
 package napplet;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+
 import processing.core.PApplet;
 
 public interface Nibble {
@@ -23,6 +26,10 @@ public interface Nibble {
 	public abstract void setup();
 	
 	public abstract void draw();
+	
+	public abstract void passKeyEvent(KeyEvent event);
+	
+	public abstract void passMouseEvent(MouseEvent event);
 
 	/**
 	 * Run one frame of the NApplet. At present just calls handleDraw() (which
