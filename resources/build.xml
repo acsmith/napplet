@@ -23,7 +23,7 @@
 	
 
 <!-- #### (4) set the java version that should be used to compile your library. #### -->	
-	<property name="javaVersion" value="1.5"/>
+	<property name="javaVersion" value="1.4.2"/>
 		
 		
 		
