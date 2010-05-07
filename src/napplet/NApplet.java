@@ -18,7 +18,7 @@ import processing.core.PImage;
  * 
  */
 @SuppressWarnings( { "serial" })
-public class NApplet extends PApplet {
+public class NApplet extends PApplet implements Nibble {
 
 	public static final String VERSION = "0.1.0";
 
@@ -50,7 +50,7 @@ public class NApplet extends PApplet {
 	 * The manager for this NApplet. Remains null if this NApplet is being run
 	 * on its own, otherwise the manager will set it.
 	 */
-	public NAppletManager nappletManager = null;
+	public NibbleManager nappletManager = null;
 
 	/**
 	 * The x-position of this NApplet's display space in its parent's display,
@@ -248,10 +248,70 @@ public class NApplet extends PApplet {
 			});
 	}
 
-	/**
-	 * Run one frame of the NApplet. At present just calls handleDraw() (which
-	 * is not subclassed; we're just using the PApplet draw routines; it works
-	 * out nicely.)
+	/* (non-Javadoc)
+	 * @see napplet.Nibble#getPositionX()
+	 */
+	public int getPositionX() {
+		return nappletX;
+	}
+
+	/* (non-Javadoc)
+	 * @see napplet.Nibble#getPositionY()
+	 */
+	public int getPositionY() {
+		return nappletY;
+	}
+
+	/* (non-Javadoc)
+	 * @see napplet.Nibble#setPosition(int, int)
+	 */
+	public void setPosition(int x, int y) {
+		nappletX = x;
+		nappletY = y;
+	}
+	
+	/* (non-Javadoc)
+	 * @see napplet.Nibble#getWidth()
+	 */
+	public int getWidth() {
+		return width;
+	}
+	
+	/* (non-Javadoc)
+	 * @see napplet.Nibble#getHeight()
+	 */
+	public int getHeight() {
+		return height;
+	}
+	
+	public boolean isHidden() {
+		return nappletHidden;
+	}
+	
+	/* (non-Javadoc)
+	 * @see napplet.Nibble#isEmbedded()
+	 */
+	public boolean isEmbedded() {
+		return embeddedNApplet;
+	}
+	
+	public void setParentPApplet(PApplet pap) {
+		parentPApplet = pap;
+	}
+
+	/* (non-Javadoc)
+	 * @see napplet.Nibble#getParentPApplet()
+	 */
+	public PApplet getParentPApplet() {
+		return parentPApplet;
+	}
+	
+	public void setManager(NibbleManager nappletManager) {
+		this.nappletManager = nappletManager;
+	}
+
+	/* (non-Javadoc)
+	 * @see napplet.Nibble#runFrame()
 	 */
 	public void runFrame() {
 
@@ -477,7 +537,7 @@ public class NApplet extends PApplet {
 	 * @return The created NApplet.
 	 */
 	public static NApplet createNApplet(PApplet parent,
-			String nappletClassName, NAppletManager nappletManager) {
+			String nappletClassName, NibbleManager nappletManager) {
 		Class<?> nappletClass = null;
 		Constructor<?> constructor = null;
 		Class<?>[] constructorParams = {};
