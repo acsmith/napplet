@@ -22,7 +22,7 @@ public class SwingBlock extends NApplet {
 				show();
 			}
 		}
-		background(0, 0);
+		background(0, 125);
 		stroke(255);
 		fill(fillShade);
 		translate(width/2, height/2);

@@ -18,7 +18,7 @@ import processing.core.PImage;
  * 
  */
 @SuppressWarnings( { "serial" })
-public class NApplet extends PApplet {
+public class NApplet extends PApplet implements Nibble {
 
 	public static final String VERSION = "0.1.0";
 
@@ -50,7 +50,7 @@ public class NApplet extends PApplet {
 	 * The manager for this NApplet. Remains null if this NApplet is being run
 	 * on its own, otherwise the manager will set it.
 	 */
-	public NAppletManager nappletManager = null;
+	public NibbleManager nappletManager = null;
 
 	/**
 	 * The x-position of this NApplet's display space in its parent's display,
@@ -88,8 +88,14 @@ public class NApplet extends PApplet {
 	 */
 	public boolean nappletCloseable = false;
 
+	/**
+	 * Tint used for pasting this NApplet into its parent's display space.
+	 * Mainly useful for setting the alpha channel to get translucency. Should
+	 * be settable with Processing's "color datatype", e.g., nappletTint =
+	 * color(255, 127) or whatever.
+	 */
 	public int nappletTint = 0xffffffff;
-	
+
 	/**
 	 * Do-nothing constructor. Use initEmbeddedNApplet() or
 	 * initWindowedNApplet() to initialize a NApplet.
@@ -97,6 +103,22 @@ public class NApplet extends PApplet {
 	public NApplet() {
 	}
 
+	/**
+	 * Does the main grunt-work of NApplet initialization. Mostly it's just
+	 * transplanted stuff from PApplet.init(); the intent is to make Pinocchio
+	 * as much like a real boy as possible.
+	 * 
+	 * @param pap
+	 *            Parent PApplet (or NApplet)
+	 * @param x
+	 *            x-coordinate of the NApplet
+	 * @param y
+	 *            y-coordinate of the NApplet
+	 * @param sketchPath
+	 *            home folder for the NApplet (potentially this will be useful
+	 *            later on for napplet-izing an existing processing sketch (need
+	 *            to write a tool for this).
+	 */
 	protected void initNApplet(PApplet pap, int x, int y, String sketchPath) {
 		parentPApplet = pap;
 
@@ -226,11 +248,79 @@ public class NApplet extends PApplet {
 			});
 	}
 
+	/* (non-Javadoc)
+	 * @see napplet.Nibble#getPositionX()
+	 */
+	public int getPositionX() {
+		return nappletX;
+	}
+
+	/* (non-Javadoc)
+	 * @see napplet.Nibble#getPositionY()
+	 */
+	public int getPositionY() {
+		return nappletY;
+	}
+
+	/* (non-Javadoc)
+	 * @see napplet.Nibble#setPosition(int, int)
+	 */
+	public void setPosition(int x, int y) {
+		nappletX = x;
+		nappletY = y;
+	}
+	
+	/* (non-Javadoc)
+	 * @see napplet.Nibble#getWidth()
+	 */
+	public int getWidth() {
+		return width;
+	}
+	
+	/* (non-Javadoc)
+	 * @see napplet.Nibble#getHeight()
+	 */
+	public int getHeight() {
+		return height;
+	}
+	
+	public boolean isHidden() {
+		return nappletHidden;
+	}
+	
+	/* (non-Javadoc)
+	 * @see napplet.Nibble#isEmbedded()
+	 */
+	public boolean isEmbedded() {
+		return embeddedNApplet;
+	}
+	
+	public void setParentPApplet(PApplet pap) {
+		parentPApplet = pap;
+	}
+
+	/* (non-Javadoc)
+	 * @see napplet.Nibble#getParentPApplet()
+	 */
+	public PApplet getParentPApplet() {
+		return parentPApplet;
+	}
+	
+	public void setManager(NibbleManager nappletManager) {
+		this.nappletManager = nappletManager;
+	}
+
+	/* (non-Javadoc)
+	 * @see napplet.Nibble#runFrame()
+	 */
 	public void runFrame() {
 
 		handleDraw();
 	}
 
+	/**
+	 * Hides the NApplet.
+	 */
 	public void hide() {
 		if (frame != null) {
 			frame.setVisible(false);
@@ -238,6 +328,9 @@ public class NApplet extends PApplet {
 		nappletHidden = true;
 	}
 
+	/**
+	 * Unhides the NApplet.
+	 */
 	public void show() {
 		if (frame != null) {
 			frame.setVisible(true);
@@ -245,19 +338,42 @@ public class NApplet extends PApplet {
 		nappletHidden = false;
 	}
 
+	/**
+	 * Called when a window-closing event is received (presumably the user
+	 * clicking the close widget.)
+	 */
 	public void userWindowClose() {
 		if (nappletCloseable)
 			exit();
 	}
 
+	/**
+	 * Override for PApplet.exit(). Handles things for a windowed or embedded
+	 * NApplet, or falls through to PApplet.exit() for a standalone.
+	 */
 	public void exit() {
-		if (embeddedNApplet || windowedNApplet) {
+		if (windowedNApplet)
 			frame.dispose();
+		if (embeddedNApplet || windowedNApplet)
 			nappletManager.killNApplet(this);
-		} else
+		else
 			super.exit();
 	}
 
+	/**
+	 * Override for PApplet.size(). Falls through for standalone or windowed
+	 * NApplets.
+	 * 
+	 * @param iwidth
+	 *            Desired width
+	 * @param iheight
+	 *            Desired height
+	 * @param irenderer
+	 *            Desired renderer
+	 * @param ipath
+	 *            Desired um... path? I forget what this does; it's passed
+	 *            through to the same argument for PApplet.makeGraphics().
+	 */
 	public void size(final int iwidth, final int iheight, String irenderer,
 			String ipath) {
 		if (embeddedNApplet) {
@@ -351,6 +467,10 @@ public class NApplet extends PApplet {
 	// bring it back at some point, but it'll be tricky to manage it properly
 	// for embedded NApplets.
 
+	/**
+	 * Cursor manipulation disabled for now for embedded NApplets. Should work
+	 * fine for windowed or standalone NApplets (though I haven't tested that.)
+	 */
 	public void cursor(int cursorType) {
 		if (embeddedNApplet)
 			System.err
@@ -359,6 +479,10 @@ public class NApplet extends PApplet {
 			super.cursor(cursorType);
 	}
 
+	/**
+	 * Cursor manipulation disabled for now for embedded NApplets. Should work
+	 * fine for windowed or standalone NApplets (though I haven't tested that.)
+	 */
 	public void cursor(PImage image) {
 		if (embeddedNApplet)
 			System.err
@@ -367,6 +491,10 @@ public class NApplet extends PApplet {
 			super.cursor(image);
 	}
 
+	/**
+	 * Cursor manipulation disabled for now for embedded NApplets. Should work
+	 * fine for windowed or standalone NApplets (though I haven't tested that.)
+	 */
 	public void cursor(PImage image, int hotspotX, int hotspotY) {
 		if (embeddedNApplet)
 			System.err
@@ -375,6 +503,10 @@ public class NApplet extends PApplet {
 			super.cursor(image, hotspotX, hotspotY);
 	}
 
+	/**
+	 * Cursor manipulation disabled for now for embedded NApplets. Should work
+	 * fine for windowed or standalone NApplets (though I haven't tested that.)
+	 */
 	public void cursor() {
 		if (embeddedNApplet)
 			System.err
@@ -383,6 +515,10 @@ public class NApplet extends PApplet {
 			super.cursor();
 	}
 
+	/**
+	 * Cursor manipulation disabled for now for embedded NApplets. Should work
+	 * fine for windowed or standalone NApplets (though I haven't tested that.)
+	 */
 	public void noCursor() {
 		if (embeddedNApplet)
 			System.err
@@ -401,7 +537,7 @@ public class NApplet extends PApplet {
 	 * @return The created NApplet.
 	 */
 	public static NApplet createNApplet(PApplet parent,
-			String nappletClassName, NAppletManager nappletManager) {
+			String nappletClassName, NibbleManager nappletManager) {
 		Class<?> nappletClass = null;
 		Constructor<?> constructor = null;
 		Class<?>[] constructorParams = {};

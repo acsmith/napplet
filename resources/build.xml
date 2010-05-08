@@ -29,8 +29,6 @@
 	<property name="javaTargetVersion" value="1.4.2" />
 
 
-
-
 	<!-- #### 	the following items are properties that will be used to make changes to 
 				the html document template. values of properties will be 
 				implemented ito the document automatically. #### -->
