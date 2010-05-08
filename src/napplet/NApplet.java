@@ -18,7 +18,7 @@ import processing.core.PImage;
  * 
  */
 @SuppressWarnings( { "serial" })
-public class NApplet extends PApplet implements Nibble {
+public class NApplet extends PApplet implements Nit {
 
 	public static final String VERSION = "0.1.0";
 
@@ -50,7 +50,7 @@ public class NApplet extends PApplet implements Nibble {
 	 * The manager for this NApplet. Remains null if this NApplet is being run
 	 * on its own, otherwise the manager will set it.
 	 */
-	public NibbleManager nappletManager = null;
+	public NitManager nappletManager = null;
 
 	/**
 	 * The x-position of this NApplet's display space in its parent's display,
@@ -306,7 +306,7 @@ public class NApplet extends PApplet implements Nibble {
 		return parentPApplet;
 	}
 	
-	public void setManager(NibbleManager nappletManager) {
+	public void setManager(NitManager nappletManager) {
 		this.nappletManager = nappletManager;
 	}
 
@@ -355,7 +355,7 @@ public class NApplet extends PApplet implements Nibble {
 		if (windowedNApplet)
 			frame.dispose();
 		if (embeddedNApplet || windowedNApplet)
-			nappletManager.killNApplet(this);
+			nappletManager.killNit(this);
 		else
 			super.exit();
 	}
@@ -537,7 +537,7 @@ public class NApplet extends PApplet implements Nibble {
 	 * @return The created NApplet.
 	 */
 	public static NApplet createNApplet(PApplet parent,
-			String nappletClassName, NibbleManager nappletManager) {
+			String nappletClassName, NitManager nappletManager) {
 		Class<?> nappletClass = null;
 		Constructor<?> constructor = null;
 		Class<?>[] constructorParams = {};
