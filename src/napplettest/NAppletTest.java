@@ -10,7 +10,6 @@ public class NAppletTest extends PApplet {
 	NAppletManager nAppletManager;
 	NApplet nap;
 	
-	
 	public void setup() {
 		size(300, 300);
 		nAppletManager = new NAppletManager(this);
