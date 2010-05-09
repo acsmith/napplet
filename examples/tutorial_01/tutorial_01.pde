@@ -1,6 +1,6 @@
 import napplet.*;
 
-NAppletManager nappletManager;
+NitManager nitManager;
 PFont mainFont;
 
 String sketchText = 
@@ -17,9 +17,9 @@ void setup() {
   mainFont = loadFont("ArialMT-18.vlw");
   textMode(SCREEN);
   
-  nappletManager = new NAppletManager(this);
-  nappletManager.createNApplet("MouseFollow", 25, 200);
-  nappletManager.createNApplet("MouseFollow", 275, 200);
+  nitManager = new NitManager(this);
+  nitManager.createNApplet("MouseFollow", 25, 200);
+  nitManager.createNApplet("MouseFollow", 275, 200);
 }
 
 void draw() {

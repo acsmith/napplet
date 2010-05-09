@@ -12,16 +12,16 @@ void setup() {
   textMode(SCREEN);
   textAlign(CENTER, TOP);
   
-  NAppletManager nappletManager = new NAppletManager(this);
+  NitManager nitManager = new NitManager(this);
 
-  nappletManager.createNApplet("Scrollbar", 0, 100);
-  nappletManager.createNApplet("Pattern", 200, 100);
-  nappletManager.createNApplet("Convolution", 400, 100);
-  nappletManager.createNApplet("Animator", 600, 100);
-  nappletManager.createNApplet("BouncyBubbles", 0, 300);
-  nappletManager.createNApplet("FireCube", 200, 300);
-  nappletManager.createNApplet("Tickle", 400, 300);
-  nappletManager.createNApplet("UnlimitedSprites", 600, 300);
+  nitManager.createNApplet("Scrollbar", 0, 100);
+  nitManager.createNApplet("Pattern", 200, 100);
+  nitManager.createNApplet("Convolution", 400, 100);
+  nitManager.createNApplet("Animator", 600, 100);
+  nitManager.createNApplet("BouncyBubbles", 0, 300);
+  nitManager.createNApplet("FireCube", 200, 300);
+  nitManager.createNApplet("Tickle", 400, 300);
+  nitManager.createNApplet("UnlimitedSprites", 600, 300);
 }
 
 void draw() {

@@ -1,24 +1,54 @@
 import napplet.*;
 
-NAppletManager nappletManager;
-PFont mainFont;
+NitManager nitManager;
+PFont mainFont, codeFont;
 
 String sketchText = 
-  "A NApplet is written just like a regular Processing\n" +
-  "sketch, but within its own Class.  It has its own\n" +
-  "setup() and draw() routines, its own variables, etc.\n\n"
-  "The source code for the NApplet below is on the right.";
+  "A NApplet is written just like a regular\n" +
+  "Processing sketch, but within its own\n" + 
+  "class.  It has its own setup() and\n" + 
+  "draw() routines, its own variables, etc.\n" +
+  "The source code for the NApplet\n" + 
+  "below is on the right, or you can see it\n" +
+  "in the code for this sketch.";
 
-  int sketchTextWidth = textWidth(sketchText);
-  
+int sketchTextWidth;
+
+String codeText = 
+  "public class MouseFollow\n" + 
+  "  extends NApplet {\n" +
+  "  \n" +
+  "  int x, y;\n" +
+  "  \n" +
+  "  public void setup() {\n" +
+  "    size(200, 200);\n" +
+  "    mouseX = x = width/2;\n" +
+  "    mouseY = y = height/2;\n" +
+  "  }\n" +
+  "  \n" +
+  "  public void draw() {\n" +
+  "    x = (7*x + mouseX)/8;\n" +
+  "    y = (7*y + mouseY)/8;\n" +
+  "    \n" +
+  "    background(0);\n" +
+  "    stroke(255);\n" +
+  "    fill(150);\n" +
+  "    ellipse(x, y, 50, 50);\n" +
+  "  }\n" +
+  "}";
+
 void setup() {
   size(600, 400);
-  mainFont = loadFont("ArialMT-18.vlw");
+  mainFont = loadFont("../../tutorial_01/data/ArialMT-18.vlw");
+  codeFont = loadFont("../../tutorial_01/data/CourierNewPS-BoldMT-14.vlw");
   textMode(SCREEN);
+  textAlign(LEFT, TOP);
   
-  nappletManager = new NAppletManager(this);
-  nappletManager.createNApplet("MouseFollow", 
-    20+ sketchTextWidth/2 - 100, 200);
+  sketchTextWidth = (int) textWidth(sketchText);
+  
+  nitManager = new NitManager(this);
+  nitManager.createNApplet("MouseFollow", 
+    sketchTextWidth/2 - 80, 180);
 }
 
 void draw() {
@@ -26,22 +56,24 @@ void draw() {
   stroke(255);
   fill(255);
 
-  textFont(mainFont, 18);
-  textAlign(LEFT, TOP);
-  text(sketchText, 20, 20); 
+  textFont(mainFont);
+  text(sketchText, 20, 20);
+  
+  textFont(codeFont);
+  text(codeText, 340, 20);
 }
 
 public class MouseFollow extends NApplet {
   
   int x, y;
   
-  void setup() {
+  public void setup() {
     size(200, 200);
     mouseX = x = width/2;
     mouseY = y = height/2;
   }
   
-  void draw() {
+  public void draw() {
     x = (7*x + mouseX)/8;
     y = (7*y + mouseY)/8;
     

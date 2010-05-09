@@ -1,85 +1,116 @@
 import napplet.*;
 
-NAppletManager nappletManager;
+NitManager nitManager;
 PFont mainFont, codeFont;
 
-String sketchText = 
-  "A NApplet is written just like a regular\n" +
-  "Processing sketch, but within its own\n" + 
-  "class.  It has its own setup() and\n" + 
-  "draw() routines, its own variables, etc.\n" +
-  "The source code for the NApplet\n" + 
-  "below is on the right, or you can see it\n" +
-  "in the code for this sketch.";
+String titleText = "NApplets can be created in their own windows.";
 
-int sketchTextWidth;
+String bottomText = "Create as many as you like.";
 
-String codeText = 
-  "public class MouseFollow\n" + 
-  "  extends NApplet {\n" +
-  "  \n" +
-  "  int x, y;\n" +
-  "  \n" +
-  "  public void setup() {\n" +
-  "    size(200, 200);\n" +
-  "    mouseX = x = width/2;\n" +
-  "    mouseY = y = height/2;\n" +
-  "  }\n" +
-  "  \n" +
-  "  public void draw() {\n" +
-  "    x = (7*x + mouseX)/8;\n" +
-  "    y = (7*y + mouseY)/8;\n" +
-  "    \n" +
-  "    background(0);\n" +
-  "    stroke(255);\n" +
-  "    fill(150);\n" +
-  "    ellipse(x, y, 50, 50);\n" +
-  "  }\n" +
-  "}";
+String button1Text = 
+  "Click Here\nto Create a\nNice Window";
+
+String button2Text = 
+  "Click Here\nto Create a\nMean Window";
 
 void setup() {
-  size(600, 400);
-  mainFont = loadFont("ArialMT-18.vlw");
-  codeFont = loadFont("CourierNewPS-BoldMT-14.vlw");
+  size(400, 200);
+  mainFont = loadFont("../../tutorial_01/data/ArialMT-18.vlw");
+  codeFont = loadFont("../../tutorial_01/data/CourierNewPS-BoldMT-14.vlw");
   textMode(SCREEN);
-  textAlign(LEFT, TOP);
+  textAlign(CENTER, CENTER);
   
-  sketchTextWidth = (int) textWidth(sketchText);
-  
-  nappletManager = new NAppletManager(this);
-  nappletManager.createNApplet("MouseFollow", 
-    sketchTextWidth/2 - 80, 180);
+  nitManager = new NitManager(this);
 }
 
 void draw() {
-  background(50);
+  background(0);
   stroke(255);
-  fill(255);
-
-  textFont(mainFont);
-  text(sketchText, 20, 20);
+  fill(100);
   
-  textFont(codeFont);
-  text(codeText, 340, 20);
+  rect(width/12, height/4, width/3, height/2);
+  rect(7*width/12, height/4, width/3, height/2);
+  
+  textFont(mainFont);
+  fill(255);
+  text(titleText, width/2, height/8);
+  text(bottomText, width/2, 7*height/8);
+  text(button1Text, width/4, height/2);
+  text(button2Text, 3*width/4, height/2);
 }
 
-public class MouseFollow extends NApplet {
+void mousePressed() {
+  if (mouseY >= height/4 && mouseY <= 3*height/4) {
+    if (mouseX >= width/12 && mouseX <= 5*width/12) {
+      nitManager.createWindowedNApplet("NiceWindow",
+      (int) random(100, 400), (int) random(100, 400));
+    }
+    else if (mouseX >= 7*width/12 && mouseX <= 11*width/12) {
+      nitManager.createWindowedNApplet("MeanWindow",
+      (int) random(100, 400), (int) random(100, 400));
+    }
+  }
+}
+
+public class NiceWindow extends NApplet {
   
-  int x, y;
+  String sketchText = 
+  "This window can be\n" + 
+  "closed with the controls\n" + 
+  "on the title bar, because\n" +
+  "nappletCloseable is true.\n" +
+  "(Or the NApplet will close\n" + 
+  "itself if you hit the X key.)";
   
   public void setup() {
-    size(200, 200);
-    mouseX = x = width/2;
-    mouseY = y = height/2;
+    size(250, 250);
+    nappletCloseable = true;
+    textMode(SCREEN);
+    textAlign(CENTER, CENTER);
   }
   
   public void draw() {
-    x = (7*x + mouseX)/8;
-    y = (7*y + mouseY)/8;
-    
-    background(0);
+    background(0, 100, 0);
     stroke(255);
-    fill(150);
-    ellipse(x, y, 50, 50);
-  }    
+    fill(255);
+    
+    textFont(mainFont);
+    text(sketchText, width/2, height/2);
+  }
+  
+  public void keyPressed() {
+    if (key=='x' || key=='X') exit();
+  }
+}
+
+
+public class MeanWindow extends NApplet {
+  
+  String sketchText = 
+  "This window can't be\n" + 
+  "closed with the controls\n" + 
+  "on the title bar, because\n" +
+  "nappletCloseable is false.\n" +
+  "(But the NApplet will close\n" + 
+  "itself if you hit the X key.)";
+  
+  public void setup() {
+    size(250, 250);
+    nappletCloseable = false; // Not actually necessary, false by default.
+    textMode(SCREEN);
+    textAlign(CENTER, CENTER);
+  }
+  
+  public void draw() {
+    background(100, 0, 0);
+    stroke(255);
+    fill(255);
+    
+    textFont(mainFont);
+    text(sketchText, width/2, height/2);
+  }
+  
+  public void keyPressed() {
+    if (key=='x' || key=='X') exit();
+  }
 }

@@ -50,7 +50,7 @@ public class NApplet extends PApplet implements Nit {
 	 * The manager for this NApplet. Remains null if this NApplet is being run
 	 * on its own, otherwise the manager will set it.
 	 */
-	public NitManager nappletManager = null;
+	public NitManager nitManager = null;
 
 	/**
 	 * The x-position of this NApplet's display space in its parent's display,
@@ -307,7 +307,7 @@ public class NApplet extends PApplet implements Nit {
 	}
 	
 	public void setManager(NitManager nappletManager) {
-		this.nappletManager = nappletManager;
+		this.nitManager = nappletManager;
 	}
 
 	/* (non-Javadoc)
@@ -355,7 +355,7 @@ public class NApplet extends PApplet implements Nit {
 		if (windowedNApplet)
 			frame.dispose();
 		if (embeddedNApplet || windowedNApplet)
-			nappletManager.killNit(this);
+			nitManager.killNit(this);
 		else
 			super.exit();
 	}
@@ -588,7 +588,7 @@ public class NApplet extends PApplet implements Nit {
 			}
 		}
 
-		napplet.nappletManager = nappletManager;
+		napplet.nitManager = nappletManager;
 		return napplet;
 	}
 

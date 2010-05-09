@@ -86,17 +86,18 @@ public class NitManager {
 			if (nit != focusNit) {
 				Nit focusGainingNit = (nit instanceof NApplet) ? nit : null;
 				Nit focusLosingNit = (focusNit instanceof NApplet) ? focusNit
-						: null;
-				FocusEvent gainFocus = new FocusEvent(
+						: null;				
+				if (focusGainingNit!=null) {
+					FocusEvent gainFocus = new FocusEvent(
 						(NApplet) focusGainingNit, FOCUS_GAINED, false,
 						(NApplet) focusLosingNit);
-				FocusEvent loseFocus = new FocusEvent((NApplet) focusLosingNit,
-						FOCUS_LOST, false, (NApplet) focusGainingNit);
-
-				nit.focusGained(gainFocus);
-				
-				if (focusNit != null)
-					focusNit.focusLost(loseFocus);
+					focusGainingNit.focusGained(gainFocus);
+				}
+				if (focusLosingNit!=null) {
+					FocusEvent loseFocus = new FocusEvent((NApplet) focusLosingNit,
+							FOCUS_LOST, false, (NApplet) focusGainingNit);
+					focusLosingNit.focusLost(loseFocus);
+				}
 				focusNit = nit;
 			}
 		}
