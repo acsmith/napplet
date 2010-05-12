@@ -3,6 +3,7 @@ package napplet;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
 import processing.core.PApplet;
 
@@ -31,6 +32,8 @@ public interface Nit {
 	public abstract void passKeyEvent(KeyEvent event);
 	
 	public abstract void passMouseEvent(MouseEvent event);
+
+	public abstract void passMouseWheelEvent(MouseWheelEvent event);
 	
 	public abstract void focusGained(FocusEvent gainFocus);
 

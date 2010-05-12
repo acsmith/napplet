@@ -29,6 +29,8 @@ public class SwingBlock extends NApplet {
 		rotate(frameCount*processing.core.PConstants.PI/180f);
 		translate(width/3, 0);
 		rect(-5, -5, 10, 10);
+
+		System.out.println(mouseWheel + "   " + (mouseWheel - pmouseWheel));
 		
 	}
 	

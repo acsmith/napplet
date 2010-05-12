@@ -43,7 +43,7 @@
 	<property name="libraryName" value="napplet" />
 
 	<!-- #### (8) give your library a name. edit value.   #### -->
-	<property name="versionNumber" value="0.2.0" />
+	<property name="versionNumber" value="0.3.0" />
 
 	<!-- #### (9) your contact url. edit value. #### -->
 	<property name="yourLink" value="http://www.processing.org" />

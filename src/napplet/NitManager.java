@@ -7,12 +7,14 @@ import static processing.core.PConstants.ARGB;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import processing.core.PApplet;
 
-public class NitManager {
+public class NitManager implements MouseWheelListener {
 
 	List<Nit> nitList = new ArrayList<Nit>();
 	List<Nit> killList = new ArrayList<Nit>();
@@ -30,6 +32,7 @@ public class NitManager {
 		parentPApplet.registerDraw(this);
 		parentPApplet.registerMouseEvent(this);
 		parentPApplet.registerKeyEvent(this);
+		parentPApplet.addMouseWheelListener(this);
 	}
 
 	public void addNit(Nit nit) {
@@ -104,8 +107,17 @@ public class NitManager {
 	}
 
 	public void keyEvent(KeyEvent event) {
+		System.out.println("kE()");
+
 		if (focusNit != null) {
 			focusNit.passKeyEvent(event);
+		}
+	}
+	
+	public void mouseWheelEvent(MouseWheelEvent event) {
+		System.out.println("mWE()");
+		if (focusNit != null) {
+			focusNit.passMouseWheelEvent(event);
 		}
 	}
 
@@ -135,6 +147,11 @@ public class NitManager {
 
 	public void killNit(Nit nit) {
 		killList.add(nit);
+	}
+
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		System.out.println("mWM()");
+		mouseWheelEvent(e);
 	}
 
 }

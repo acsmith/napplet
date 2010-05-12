@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.Constructor;
@@ -18,7 +20,7 @@ import processing.core.PImage;
  * 
  */
 @SuppressWarnings( { "serial" })
-public class NApplet extends PApplet implements Nit {
+public class NApplet extends PApplet implements Nit, MouseWheelListener {
 
 	public static final String VERSION = "0.1.0";
 
@@ -95,6 +97,19 @@ public class NApplet extends PApplet implements Nit {
 	 * color(255, 127) or whatever.
 	 */
 	public int nappletTint = 0xffffffff;
+
+	/**
+	 * Current position of the mouse wheel. Starts at zero, increases by one for
+	 * each "click" the wheel is rotated towards the user (i.e., "down"),
+	 * decreases for each click rotated away from the user ("up").
+	 */
+	public int mouseWheel = 0;
+
+	/**
+	 * Previous position of the mouse wheel (before the most recent movement of
+	 * the wheel.)
+	 */
+	public int pmouseWheel = 0;
 
 	/**
 	 * Do-nothing constructor. Use initEmbeddedNApplet() or
@@ -236,6 +251,11 @@ public class NApplet extends PApplet implements Nit {
 		initEmbeddedNApplet(pap, 0, 0, pap.sketchPath);
 	}
 
+	public void addListeners() {
+		super.addListeners();
+		addMouseWheelListener(this);
+	}
+
 	/**
 	 * Allow for user closing of windowed NApplets.
 	 */
@@ -248,69 +268,85 @@ public class NApplet extends PApplet implements Nit {
 			});
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see napplet.Nibble#getPositionX()
 	 */
 	public int getPositionX() {
 		return nappletX;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see napplet.Nibble#getPositionY()
 	 */
 	public int getPositionY() {
 		return nappletY;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see napplet.Nibble#setPosition(int, int)
 	 */
 	public void setPosition(int x, int y) {
 		nappletX = x;
 		nappletY = y;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see napplet.Nibble#getWidth()
 	 */
 	public int getWidth() {
 		return width;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see napplet.Nibble#getHeight()
 	 */
 	public int getHeight() {
 		return height;
 	}
-	
+
 	public boolean isHidden() {
 		return nappletHidden;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see napplet.Nibble#isEmbedded()
 	 */
 	public boolean isEmbedded() {
 		return embeddedNApplet;
 	}
-	
+
 	public void setParentPApplet(PApplet pap) {
 		parentPApplet = pap;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see napplet.Nibble#getParentPApplet()
 	 */
 	public PApplet getParentPApplet() {
 		return parentPApplet;
 	}
-	
+
 	public void setManager(NitManager nappletManager) {
 		this.nitManager = nappletManager;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see napplet.Nibble#runFrame()
 	 */
 	public void runFrame() {
@@ -409,6 +445,10 @@ public class NApplet extends PApplet implements Nit {
 	 */
 	public void passMouseEvent(MouseEvent event) {
 		this.enqueueMouseEvent(event);
+	}
+
+	public void passMouseWheelEvent(MouseWheelEvent event) {
+		this.mouseWheelMoved(event);
 	}
 
 	/**
@@ -590,6 +630,16 @@ public class NApplet extends PApplet implements Nit {
 
 		napplet.nitManager = nappletManager;
 		return napplet;
+	}
+
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		pmouseWheel = mouseWheel;
+		mouseWheel += e.getWheelRotation();
+		mouseWheelMoved();
+	}
+
+	public void mouseWheelMoved() {
+
 	}
 
 }
