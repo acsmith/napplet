@@ -32,7 +32,8 @@ public class NitManager implements MouseWheelListener {
 		parentPApplet.registerDraw(this);
 		parentPApplet.registerMouseEvent(this);
 		parentPApplet.registerKeyEvent(this);
-		parentPApplet.addMouseWheelListener(this);
+		if (!(parentPApplet instanceof NApplet)) // NApplets already have mousewheel functionality.
+			parentPApplet.addMouseWheelListener(this);
 	}
 
 	public void addNit(Nit nit) {
