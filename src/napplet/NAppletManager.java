@@ -78,7 +78,7 @@ public class NAppletManager implements MouseWheelListener {
 
 	void passMouseEvent(Nit nit, MouseEvent event) {
 		event.translatePoint(-(nit.getPositionX()), -(nit.getPositionY()));
-		nit.passMouseEvent(event);
+		nit.passEvent(event);
 	}
 
 	public void mouseEvent(MouseEvent event) {
@@ -114,13 +114,13 @@ public class NAppletManager implements MouseWheelListener {
 
 	public void keyEvent(KeyEvent event) {
 		if (focusNit != null) {
-			focusNit.passKeyEvent(event);
+			focusNit.passEvent(event);
 		}
 	}
 	
 	public void mouseWheelEvent(MouseWheelEvent event) {
 		if (focusNit != null) {
-			focusNit.passMouseWheelEvent(event);
+			focusNit.passEvent(event);
 		}
 	}
 

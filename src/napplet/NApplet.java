@@ -2,6 +2,7 @@ package napplet;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -436,34 +437,24 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	}
 
 	/**
-	 * Accessor for queueing mouse events. Used by the NAppletManager since
-	 * PApplet.enqueueMouseEvent() is protected.
+	 * Accessor for queueing mouse and keyboard events. Used by the
+	 * NAppletManager since PApplet.enqueueXXXXEvent() is protected.
 	 * 
 	 * @param event
-	 *            Mouse event. This needs to be translated to the NApplet's
-	 *            local screen coordinates.
+	 *            Input event to be queued. Mouse locations need to be
+	 *            translated to the NApplet's local coordinates.
 	 */
-	public void passMouseEvent(MouseEvent event) {
-		this.enqueueMouseEvent(event);
-	}
-
-	public void passMouseWheelEvent(MouseWheelEvent event) {
-		this.mouseWheelMoved(event);
+	public void passEvent(InputEvent event) {
+		if (event instanceof MouseWheelEvent)
+			this.mouseWheelMoved((MouseWheelEvent) event);
+		else if (event instanceof MouseEvent)
+			this.enqueueMouseEvent((MouseEvent) event);
+		else if (event instanceof java.awt.event.KeyEvent)
+			this.enqueueKeyEvent((KeyEvent) event);
 	}
 
 	/**
-	 * Accessor for queueing keyboard events. Used by the NAppletManager since
-	 * PApplet.enqueueKeyEvent() is protected.
-	 * 
-	 * @param event
-	 *            Keyboard event.
-	 */
-	public void passKeyEvent(KeyEvent event) {
-		this.enqueueKeyEvent(event);
-	}
-
-	/**
-	 * Override PApplet.paint(). If the NApplet is embedded, uses the
+	 * Overrides PApplet.paint(). If the NApplet is embedded, uses the
 	 * PApplet.image() method to paint the NApplet's pixels into the parent's
 	 * display. Otherwise, just falls through to PApplet.paint().
 	 */
@@ -643,7 +634,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	}
 
 	@Override
-	public NAppletManager getNitManager() {
+	public NAppletManager getNAppletManager() {
 		return nappletManager;
 	}
 
