@@ -28,10 +28,7 @@ public class SwingBlock extends NApplet {
 		translate(width/2, height/2);
 		rotate(frameCount*processing.core.PConstants.PI/180f);
 		translate(width/3, 0);
-		rect(-5, -5, 10, 10);
-
-		System.out.println(mouseWheel + "   " + (mouseWheel - pmouseWheel));
-		
+		rect(-5, -5, 10, 10);		
 	}
 	
 	public void keyPressed() {

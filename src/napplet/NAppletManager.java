@@ -113,15 +113,12 @@ public class NAppletManager implements MouseWheelListener {
 	}
 
 	public void keyEvent(KeyEvent event) {
-		System.out.println("kE()");
-
 		if (focusNit != null) {
 			focusNit.passKeyEvent(event);
 		}
 	}
 	
 	public void mouseWheelEvent(MouseWheelEvent event) {
-		System.out.println("mWE()");
 		if (focusNit != null) {
 			focusNit.passMouseWheelEvent(event);
 		}
@@ -160,7 +157,6 @@ public class NAppletManager implements MouseWheelListener {
 	}
 
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		System.out.println("mWM()");
 		mouseWheelEvent(e);
 	}
 
