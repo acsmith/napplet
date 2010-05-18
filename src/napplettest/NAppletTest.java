@@ -1,16 +1,16 @@
 package napplettest;
 
-import napplet.NitManager;
+import napplet.NAppletManager;
 import processing.core.PApplet;
 
 @SuppressWarnings("serial")
 public class NAppletTest extends PApplet {
 
-	NitManager nitManager;
+	NAppletManager nitManager;
 	
 	public void setup() {
 		size(300, 300);
-		nitManager = new NitManager(this);
+		nitManager = new NAppletManager(this);
 		nitManager.createEmbeddedNApplet("MouseBlock", 25, 25);
 		nitManager.createEmbeddedNApplet("SwingBlock", 75, 75);
 		nitManager.createEmbeddedNApplet("SwingBlock", 175, 25);

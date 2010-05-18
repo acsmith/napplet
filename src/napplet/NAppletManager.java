@@ -14,7 +14,7 @@ import java.util.List;
 
 import processing.core.PApplet;
 
-public class NitManager implements MouseWheelListener {
+public class NAppletManager implements MouseWheelListener {
 
 	List<Nit> nitList = new ArrayList<Nit>();
 	List<Nit> killList = new ArrayList<Nit>();
@@ -25,7 +25,7 @@ public class NitManager implements MouseWheelListener {
 	Nit mouseNit;
 	public int mouseX, mouseY;
 
-	public NitManager(PApplet pap) {
+	public NAppletManager(PApplet pap) {
 		super();
 		parentPApplet = pap;
 		parentPApplet.registerPre(this);
@@ -37,9 +37,14 @@ public class NitManager implements MouseWheelListener {
 	}
 
 	public void addNit(Nit nit) {
+		nit.setNAppletManager(this);
 		nit.setParentPApplet(parentPApplet);
 		nitList.add(nit);
 		nit.setup();
+	}
+	
+	public void addNApplet(NApplet napplet) {
+		addNit(napplet);
 	}
 
 	public Nit containingNit(int x, int y) {
@@ -148,6 +153,10 @@ public class NitManager implements MouseWheelListener {
 
 	public void killNit(Nit nit) {
 		killList.add(nit);
+	}
+	
+	public void killNApplet(NApplet napplet) {
+		killNit(napplet);
 	}
 
 	public void mouseWheelMoved(MouseWheelEvent e) {

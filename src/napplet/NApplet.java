@@ -52,7 +52,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	 * The manager for this NApplet. Remains null if this NApplet is being run
 	 * on its own, otherwise the manager will set it.
 	 */
-	public NitManager nitManager = null;
+	public NAppletManager nappletManager = null;
 
 	/**
 	 * The x-position of this NApplet's display space in its parent's display,
@@ -340,8 +340,8 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 		return parentPApplet;
 	}
 
-	public void setManager(NitManager nappletManager) {
-		this.nitManager = nappletManager;
+	public void setManager(NAppletManager nappletManager) {
+		this.nappletManager = nappletManager;
 	}
 
 	/*
@@ -391,7 +391,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 		if (windowedNApplet)
 			frame.dispose();
 		if (embeddedNApplet || windowedNApplet)
-			nitManager.killNit(this);
+			nappletManager.killNit(this);
 		else
 			super.exit();
 	}
@@ -577,7 +577,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	 * @return The created NApplet.
 	 */
 	public static NApplet createNApplet(PApplet parent,
-			String nappletClassName, NitManager nappletManager) {
+			String nappletClassName, NAppletManager nappletManager) {
 		Class<?> nappletClass = null;
 		Constructor<?> constructor = null;
 		Class<?>[] constructorParams = {};
@@ -628,7 +628,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 			}
 		}
 
-		napplet.nitManager = nappletManager;
+		napplet.nappletManager = nappletManager;
 		return napplet;
 	}
 
@@ -640,6 +640,16 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 
 	public void mouseWheelMoved() {
 
+	}
+
+	@Override
+	public NAppletManager getNitManager() {
+		return nappletManager;
+	}
+
+	@Override
+	public void setNAppletManager(NAppletManager nitManager) {
+		this.nappletManager = nitManager;
 	}
 
 }

@@ -25,6 +25,10 @@ public interface Nit {
 	
 	public abstract void setParentPApplet(PApplet parentPApplet);
 	
+	public abstract NAppletManager getNitManager();
+	
+	public abstract void setNAppletManager(NAppletManager nappletManager);
+	
 	public abstract void setup();
 	
 	public abstract void draw();
