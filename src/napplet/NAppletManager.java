@@ -2,6 +2,8 @@ package napplet;
 
 import static java.awt.event.FocusEvent.FOCUS_GAINED;
 import static java.awt.event.FocusEvent.FOCUS_LOST;
+import static java.awt.event.MouseEvent.MOUSE_DRAGGED;
+import static java.awt.event.MouseEvent.MOUSE_RELEASED;
 import static processing.core.PConstants.ARGB;
 
 import java.awt.event.FocusEvent;
@@ -32,7 +34,8 @@ public class NAppletManager implements MouseWheelListener {
 		parentPApplet.registerDraw(this);
 		parentPApplet.registerMouseEvent(this);
 		parentPApplet.registerKeyEvent(this);
-		if (!(parentPApplet instanceof NApplet)) // NApplets already have mousewheel functionality.
+		if (!(parentPApplet instanceof NApplet)) // NApplets already have
+													// mousewheel functionality.
 			parentPApplet.addMouseWheelListener(this);
 	}
 
@@ -42,7 +45,7 @@ public class NAppletManager implements MouseWheelListener {
 		nitList.add(nit);
 		nit.setup();
 	}
-	
+
 	public void addNApplet(NApplet napplet) {
 		addNit(napplet);
 	}
@@ -86,7 +89,7 @@ public class NAppletManager implements MouseWheelListener {
 		mouseY = event.getY();
 
 		Nit nit = containingNit(mouseX, mouseY);
-		if ((event.getID() == java.awt.event.MouseEvent.MOUSE_DRAGGED)
+		if (((event.getID() == MOUSE_DRAGGED) || (event.getID() == MOUSE_RELEASED))
 				&& (mouseNit != null)) {
 			passMouseEvent((NApplet) mouseNit, event);
 		} else if (nit != null) {
@@ -95,16 +98,17 @@ public class NAppletManager implements MouseWheelListener {
 			if (nit != focusNit) {
 				Nit focusGainingNit = (nit instanceof NApplet) ? nit : null;
 				Nit focusLosingNit = (focusNit instanceof NApplet) ? focusNit
-						: null;				
-				if (focusGainingNit!=null) {
+						: null;
+				if (focusGainingNit != null) {
 					FocusEvent gainFocus = new FocusEvent(
-						(NApplet) focusGainingNit, FOCUS_GAINED, false,
-						(NApplet) focusLosingNit);
+							(NApplet) focusGainingNit, FOCUS_GAINED, false,
+							(NApplet) focusLosingNit);
 					focusGainingNit.focusGained(gainFocus);
 				}
-				if (focusLosingNit!=null) {
-					FocusEvent loseFocus = new FocusEvent((NApplet) focusLosingNit,
-							FOCUS_LOST, false, (NApplet) focusGainingNit);
+				if (focusLosingNit != null) {
+					FocusEvent loseFocus = new FocusEvent(
+							(NApplet) focusLosingNit, FOCUS_LOST, false,
+							(NApplet) focusGainingNit);
 					focusLosingNit.focusLost(loseFocus);
 				}
 				focusNit = nit;
@@ -117,7 +121,7 @@ public class NAppletManager implements MouseWheelListener {
 			focusNit.passEvent(event);
 		}
 	}
-	
+
 	public void mouseWheelEvent(MouseWheelEvent event) {
 		if (focusNit != null) {
 			focusNit.passEvent(event);
@@ -151,7 +155,7 @@ public class NAppletManager implements MouseWheelListener {
 	public void killNit(Nit nit) {
 		killList.add(nit);
 	}
-	
+
 	public void killNApplet(NApplet napplet) {
 		killNit(napplet);
 	}

@@ -8,6 +8,11 @@ public class SwingBlock extends NApplet {
 	int fillShade = 0;
 	int hideTimer;
 	
+	int blockSize = 10;
+	final int MIN_BLOCK_SIZE = 2;
+	final int MAX_BLOCK_SIZE = 30;
+	final int BLOCK_SIZE_STEP = 4;
+	
 	public void setup() {
 		size(100, 100);
 		nappletCloseable = true;
@@ -28,7 +33,7 @@ public class SwingBlock extends NApplet {
 		translate(width/2, height/2);
 		rotate(frameCount*processing.core.PConstants.PI/180f);
 		translate(width/3, 0);
-		rect(-5, -5, 10, 10);		
+		rect(-blockSize/2, -blockSize/2, blockSize, blockSize);		
 	}
 	
 	public void keyPressed() {
@@ -40,6 +45,12 @@ public class SwingBlock extends NApplet {
 			hide();
 			hideTimer = 30;
 		}
+	}
+	
+	public void mouseWheelMoved() {
+		blockSize -= (mouseWheel - pmouseWheel)*BLOCK_SIZE_STEP;
+		blockSize = max(blockSize, MIN_BLOCK_SIZE);
+		blockSize = min(blockSize, MAX_BLOCK_SIZE);
 	}
 	
 }
