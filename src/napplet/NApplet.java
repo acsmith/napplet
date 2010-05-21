@@ -195,7 +195,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 
 		embeddedNApplet = true;
 
-		setup();
+		//setup();
 	}
 
 	/**
@@ -221,7 +221,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 		windowedNApplet = true;
 
 		addListeners();
-		setup();
+		//setup();
 
 	}
 
@@ -351,7 +351,6 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	 * @see napplet.Nibble#runFrame()
 	 */
 	public void runFrame() {
-
 		handleDraw();
 	}
 

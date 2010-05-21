@@ -13,10 +13,13 @@ public class MouseBlock extends NApplet {
 	
 	public void setup() {
 		size(100, 100);
+		blockX = width/2;
+		blockY = height/2;
 	}
 
-	int blockX = width/2;
-	int blockY = height/2;
+	int blockX;
+	int blockY;
+	
 	public void draw() {
 		if (mousePressed) {
 			blockX = mouseX;

@@ -43,7 +43,7 @@ public class NAppletManager implements MouseWheelListener {
 		nit.setNAppletManager(this);
 		nit.setParentPApplet(parentPApplet);
 		nitList.add(nit);
-		nit.setup();
+		//nit.setup();
 	}
 
 	public void addNApplet(NApplet napplet) {
