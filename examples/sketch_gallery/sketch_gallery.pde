@@ -8,7 +8,7 @@ String sketchText =
 
 void setup() {
   size(800, 500);
-  mainFont = loadFont("ArialMT-18.vlw");
+  mainFont = loadFont("../../common/data/ArialMT-18.vlw");
   textMode(SCREEN);
   textAlign(CENTER, TOP);
   

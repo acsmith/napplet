@@ -13,7 +13,7 @@ public class Tickle extends NApplet {
   
   void setup() {
     size(200, 200);
-    PFont font = loadFont("AmericanTypewriter-24.vlw");
+    PFont font = loadFont("../../common/data/ArialMT-18.vlw");
     textFont(font);
     textAlign(CENTER, CENTER);
     hr = textWidth(message) / 2;

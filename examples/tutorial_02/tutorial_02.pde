@@ -1,6 +1,6 @@
 import napplet.*;
 
-NitManager nitManager;
+NAppletManager nappletManager;
 PFont mainFont, codeFont;
 
 String sketchText = 
@@ -39,15 +39,15 @@ String codeText =
 
 void setup() {
   size(600, 400);
-  mainFont = loadFont("../../tutorial_01/data/ArialMT-18.vlw");
+  mainFont = loadFont("../../common/data/ArialMT-18.vlw");
   codeFont = loadFont("../../tutorial_01/data/CourierNewPS-BoldMT-14.vlw");
   textMode(SCREEN);
   textAlign(LEFT, TOP);
   
   sketchTextWidth = (int) textWidth(sketchText);
   
-  nitManager = new NitManager(this);
-  nitManager.createNApplet("MouseFollow", 
+  nappletManager = new NappletManager(this);
+  nappletManager.createNApplet("MouseFollow", 
     sketchTextWidth/2 - 80, 180);
 }
 

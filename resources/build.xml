@@ -97,6 +97,7 @@
 	<property name="bin" location="bin" />
 	<property name="reference" location="reference" />
 	<property name="dist" location="distribution" />
+	<property name="zipFilename" location="${libraryName}-${versionNumber}.zip" />
 
 
 
@@ -167,7 +168,7 @@
 		</copy>
 
 		<!-- zip the distribution of the library -->
-		<zip destfile="${dist}/${libraryName}-${versionNumber}-java${javaTargetVersion}.zip" basedir="${dist}" excludes="**/_DS.Store" />
+		<zip destfile="${dist}/${zipFilename}" basedir="${dist}" excludes="**/_DS.Store" />
 
 		<!-- <rename src="${dist}/${libraryName}.zip" dest="${dist}/${libraryName}_${versionNumber}.zip" /> -->
 
@@ -225,7 +226,7 @@
 
 		<!-- finish organizating library's distribution -->
 		<mkdir dir="${dist}/web/download" />
-		<copy file="${dist}/${libraryName}-${versionNumber}-java${javaTargetVersion}.zip" todir="${dist}/web/download" />
+		<copy file="${dist}/${zipFilename}" todir="${dist}/web/download" />
 
 		<copy todir="${processing}/${libraryName}/reference">
 			<fileset dir="${reference}" />

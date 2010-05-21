@@ -1,6 +1,6 @@
 import napplet.*;
 
-NitManager nitManager;
+NAppletManager nappletManager;
 PFont mainFont, codeFont;
 
 String titleText = "NApplets can be created in their own windows.";
@@ -15,12 +15,12 @@ String button2Text =
 
 void setup() {
   size(400, 200);
-  mainFont = loadFont("../../tutorial_01/data/ArialMT-18.vlw");
+  mainFont = loadFont("../../common/data/ArialMT-18.vlw");
   codeFont = loadFont("../../tutorial_01/data/CourierNewPS-BoldMT-14.vlw");
   textMode(SCREEN);
   textAlign(CENTER, CENTER);
   
-  nitManager = new NitManager(this);
+  nappletManager = new NAppletManager(this);
 }
 
 void draw() {
@@ -42,11 +42,11 @@ void draw() {
 void mousePressed() {
   if (mouseY >= height/4 && mouseY <= 3*height/4) {
     if (mouseX >= width/12 && mouseX <= 5*width/12) {
-      nitManager.createWindowedNApplet("NiceWindow",
+      nappletManager.createWindowedNApplet("NiceWindow",
       (int) random(100, 400), (int) random(100, 400));
     }
     else if (mouseX >= 7*width/12 && mouseX <= 11*width/12) {
-      nitManager.createWindowedNApplet("MeanWindow",
+      nappletManager.createWindowedNApplet("MeanWindow",
       (int) random(100, 400), (int) random(100, 400));
     }
   }
