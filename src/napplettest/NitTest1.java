@@ -13,11 +13,7 @@ public class NitTest1 extends PApplet {
 		nappletManager = new NAppletManager(this);
 		
 		nappletManager.addNit(new Box(100, 100, 100, 100));
-//		
-//		nappletManager.createEmbeddedNApplet("MouseBlock", 25, 25);
-//		nappletManager.createEmbeddedNApplet("SwingBlock", 75, 75);
-//		nappletManager.createEmbeddedNApplet("SwingBlock", 175, 25);
-//		nappletManager.createWindowedNApplet("SwingBlock", 500, 300);
+		nappletManager.createWindowedNApplet("SwingBlock", 500, 300);
 	}
 	
 	public void draw() {

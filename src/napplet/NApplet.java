@@ -195,7 +195,12 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 
 		embeddedNApplet = true;
 
-		//setup();
+		// Do setup now, and advance the frame count so that
+		// PApplet.handleDraw() doesn't do it again. Not strictly necessary to
+		// do it this way for embedded NApplets, but for the sake of consistency
+		// and convenience we will anyway.
+		setup();
+		frameCount++;
 	}
 
 	/**
@@ -221,7 +226,11 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 		windowedNApplet = true;
 
 		addListeners();
-		//setup();
+
+		// Do setup now, so the Frame can get width and height. Then advance the
+		// frameCount once, so PApplet.handleDraw() doesn't run it again.
+		setup();
+		frameCount++;
 
 	}
 
@@ -462,7 +471,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 			if (!nappletHidden) {
 				loadPixels();
 				parentPApplet.tint(nappletTint);
-				parentPApplet.image(this.g, nappletX, nappletY);
+				parentPApplet.image(this.g, 0, 0);
 			}
 		} else
 			super.paint();
