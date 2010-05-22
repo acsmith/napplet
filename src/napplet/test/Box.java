@@ -1,4 +1,4 @@
-package napplettest;
+package napplet.test;
 
 import napplet.DrawNit;
 
