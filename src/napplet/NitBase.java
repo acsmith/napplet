@@ -71,9 +71,7 @@ public abstract class NitBase implements Nit, PConstants {
 		return embeddedNit;
 	}
 
-	public void runFrame() {
-		// TODO Auto-generated method stub
-	}
+	public abstract void runFrame();
 
 	public void passEvent(InputEvent event) {
 		if (event instanceof MouseWheelEvent) {
@@ -164,47 +162,36 @@ public abstract class NitBase implements Nit, PConstants {
 	}
 
 	public void mouseWheelMoved() {
-
 	}
 
 	public void mousePressed() {
-
 	}
 
 	public void mouseReleased() {
-
 	}
 
 	public void mouseClicked() {
-
 	}
 
 	public void mouseDragged() {
-
 	}
 
 	public void mouseMoved() {
-
 	}
 
 	public void keyPressed() {
-
 	}
 
 	public void keyReleased() {
-
 	}
 
 	public void keyTyped() {
-
 	}
 
 	public void focusGained() {
-
 	}
 
 	public void focusLost() {
-
 	}
 
 }
