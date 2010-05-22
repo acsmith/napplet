@@ -13,8 +13,12 @@ public class Box extends DrawNit {
 	
 	public void draw() {
 		parentPApplet.stroke(255);
-		parentPApplet.fill(150);
+		parentPApplet.fill(50);
 		parentPApplet.rect(0, 0, width, height);
+		String s = "" + frameCount;
+		parentPApplet.fill(255);
+		parentPApplet.text(s, width/2, height/2);
+		
 	}
 	
 }
