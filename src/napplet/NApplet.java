@@ -642,4 +642,9 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 		this.nappletManager = nitManager;
 	}
 
+	@Override
+	public boolean inputHit(int x, int y) {
+		return true;
+	}
+
 }

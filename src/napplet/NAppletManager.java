@@ -43,7 +43,8 @@ public class NAppletManager implements MouseWheelListener {
 		nit.setNAppletManager(this);
 		nit.setParentPApplet(parentPApplet);
 		nitList.add(nit);
-		//nit.setup();
+		if (!(nit instanceof NApplet))
+			nit.setup();
 	}
 
 	public void addNApplet(NApplet napplet) {
@@ -91,9 +92,9 @@ public class NAppletManager implements MouseWheelListener {
 		Nit nit = containingNit(mouseX, mouseY);
 		if (((event.getID() == MOUSE_DRAGGED) || (event.getID() == MOUSE_RELEASED))
 				&& (mouseNit != null)) {
-			passMouseEvent((NApplet) mouseNit, event);
+			passMouseEvent(mouseNit, event);
 		} else if (nit != null) {
-			passMouseEvent((NApplet) nit, event);
+			passMouseEvent(nit, event);
 			mouseNit = nit;
 			if (nit != focusNit) {
 				Nit focusGainingNit = (nit instanceof NApplet) ? nit : null;
@@ -131,7 +132,7 @@ public class NAppletManager implements MouseWheelListener {
 	public void createNApplet(String nappletClassName, int x, int y) {
 		createEmbeddedNApplet(nappletClassName, x, y);
 	}
-
+	
 	public void createEmbeddedNApplet(String nappletClassName, int x, int y) {
 		NApplet nap = NApplet.createNApplet(parentPApplet, nappletClassName,
 				this);

@@ -11,23 +11,23 @@ import processing.core.PConstants;
 
 public abstract class NitBase implements Nit, PConstants {
 
-	NAppletManager nappletManager;
-	PApplet parentPApplet;
-	int height, width;
-	int nitX, nitY;
-	boolean embeddedNit = true;
+	public NAppletManager nappletManager;
+	public PApplet parentPApplet;
+	public int height, width;
+	public int nitX, nitY;
+	public boolean embeddedNit = true;
 
-	int mouseWheel;
-	int pmouseWheel;
+	public int mouseWheel;
+	public int pmouseWheel;
 
-	int mouseX, mouseY;
-	int pmouseX, pmouseY;
-	boolean mousePressed;
-	int mouseButton;
+	public int mouseX, mouseY;
+	public int pmouseX, pmouseY;
+	public boolean mousePressed;
+	public int mouseButton;
 
-	char key;
-	int keyCode;
-	boolean keyPressed;
+	public char key;
+	public int keyCode;
+	public boolean keyPressed;
 
 	public int getHeight() {
 		return height;
@@ -43,7 +43,6 @@ public abstract class NitBase implements Nit, PConstants {
 
 	public void setNAppletManager(NAppletManager nappletManager) {
 		this.nappletManager = nappletManager;
-
 	}
 
 	public PApplet getParentPApplet() {
@@ -71,6 +70,10 @@ public abstract class NitBase implements Nit, PConstants {
 		return embeddedNit;
 	}
 
+	public boolean inputHit(int x, int y) {
+		return true;
+	}
+	
 	public abstract void runFrame();
 
 	public void passEvent(InputEvent event) {
