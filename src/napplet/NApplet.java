@@ -31,7 +31,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 
 	/**
 	 * Time in milliseconds when the applet was started. We need to have our own
-	 * number for this since PApplet's millisOffset is private.
+	 * number for this since PApplet.millisOffset is private.
 	 */
 	long millisOffset;
 
