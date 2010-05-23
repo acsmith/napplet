@@ -73,7 +73,8 @@ public class NAppletManager implements MouseWheelListener {
 	public void draw() {
 		for (Nit nit : nitList) {
 			parentPApplet.pushMatrix();
-			parentPApplet.translate(nit.getPositionX(), nit.getPositionY());
+			if (nit.isEmbedded())
+				parentPApplet.translate(nit.getPositionX(), nit.getPositionY());
 			nit.runFrame();
 			parentPApplet.popMatrix();
 		}

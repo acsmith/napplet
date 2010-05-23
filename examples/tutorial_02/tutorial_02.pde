@@ -46,7 +46,7 @@ void setup() {
   
   sketchTextWidth = (int) textWidth(sketchText);
   
-  nappletManager = new NappletManager(this);
+  nappletManager = new NAppletManager(this);
   nappletManager.createNApplet("MouseFollow", 
     sketchTextWidth/2 - 80, 180);
 }

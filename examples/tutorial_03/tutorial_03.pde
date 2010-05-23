@@ -1,11 +1,14 @@
+
 import napplet.*;
 
 NAppletManager nappletManager;
 PFont mainFont, codeFont;
 
-String titleText = "NApplets can be created in their own windows.";
+// These will be changed by the napplets:
+int nicePressTotal = 0;
+int meanPressTotal = 0;
 
-String bottomText = "Create as many as you like.";
+String titleText = "NApplets can be created in their own windows.";
 
 String button1Text = 
   "Click Here\nto Create a\nNice Window";
@@ -15,8 +18,8 @@ String button2Text =
 
 void setup() {
   size(400, 200);
-  mainFont = loadFont("../../common/data/ArialMT-18.vlw");
-  codeFont = loadFont("../../tutorial_01/data/CourierNewPS-BoldMT-14.vlw");
+  mainFont = loadFont("ArialMT-18.vlw");
+  codeFont = loadFont("CourierNewPS-BoldMT-14.vlw");
   textMode(SCREEN);
   textAlign(CENTER, CENTER);
   
@@ -34,20 +37,25 @@ void draw() {
   textFont(mainFont);
   fill(255);
   text(titleText, width/2, height/8);
-  text(bottomText, width/2, 7*height/8);
   text(button1Text, width/4, height/2);
   text(button2Text, 3*width/4, height/2);
+  
+  String s;
+  s = "Total clicks on\nnice windows: " + nicePressTotal;
+  text(s, width/4, 7*height/8);
+  s = "Total clicks on\nmean windows: " + meanPressTotal;
+  text(s, 3*width/4, 7*height/8);
 }
 
 void mousePressed() {
   if (mouseY >= height/4 && mouseY <= 3*height/4) {
     if (mouseX >= width/12 && mouseX <= 5*width/12) {
-      nappletManager.createWindowedNApplet("NiceWindow",
-      (int) random(100, 400), (int) random(100, 400));
+	nappletManager.createWindowedNApplet("NiceWindow",
+	(int) random(100, 400), (int) random(100, 400));
     }
     else if (mouseX >= 7*width/12 && mouseX <= 11*width/12) {
-      nappletManager.createWindowedNApplet("MeanWindow",
-      (int) random(100, 400), (int) random(100, 400));
+	nappletManager.createWindowedNApplet("MeanWindow",
+	(int) random(100, 400), (int) random(100, 400));
     }
   }
 }
@@ -81,6 +89,10 @@ public class NiceWindow extends NApplet {
   public void keyPressed() {
     if (key=='x' || key=='X') exit();
   }
+  
+  public void mousePressed() {
+    nicePressTotal += 1;
+  }
 }
 
 
@@ -113,4 +125,9 @@ public class MeanWindow extends NApplet {
   public void keyPressed() {
     if (key=='x' || key=='X') exit();
   }
-}
+  
+  public void mousePressed() {
+    meanPressTotal += 1;
+  }
+} 
+
