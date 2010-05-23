@@ -168,7 +168,7 @@
 		</copy>
 
 		<!-- zip the distribution of the library -->
-		<zip destfile="${dist}/${zipFilename}" basedir="${dist}" excludes="**/_DS.Store" />
+		<zip destfile="${zipFilename}" basedir="${dist}" excludes="**/_DS.Store" />
 
 		<!-- <rename src="${dist}/${libraryName}.zip" dest="${dist}/${libraryName}_${versionNumber}.zip" /> -->
 
@@ -226,7 +226,7 @@
 
 		<!-- finish organizating library's distribution -->
 		<mkdir dir="${dist}/web/download" />
-		<copy file="${dist}/${zipFilename}" todir="${dist}/web/download" />
+		<copy file="${zipFilename}" todir="${dist}/web/download" />
 
 		<copy todir="${processing}/${libraryName}/reference">
 			<fileset dir="${reference}" />
