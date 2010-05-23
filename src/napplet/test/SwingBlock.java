@@ -33,7 +33,7 @@ public class SwingBlock extends NApplet {
 		translate(width/2, height/2);
 		rotate(frameCount*processing.core.PConstants.PI/180f);
 		translate(width/3, 0);
-		rect(-blockSize/2, -blockSize/2, blockSize, blockSize);		
+		rect(-blockSize/2, -blockSize/2, blockSize, blockSize);
 	}
 	
 	public void keyPressed() {
