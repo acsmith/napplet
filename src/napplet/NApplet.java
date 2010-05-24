@@ -23,7 +23,7 @@ import processing.core.PImage;
 @SuppressWarnings( { "serial" })
 public class NApplet extends PApplet implements Nit, MouseWheelListener {
 
-	public static final String VERSION = "0.1.0";
+	public static final String VERSION = "0.3.0";
 
 	public String version() {
 		return VERSION;
@@ -50,10 +50,17 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	public PApplet parentPApplet = null;
 
 	/**
-	 * The manager for this NApplet. Remains null if this NApplet is being run
-	 * on its own, otherwise the manager will set it.
+	 * The object managing this NApplet, i.e., a NAppletManager being run by the
+	 * parent PApplet. Remains null if this NApplet is being run on its own,
+	 * otherwise the manager will set it.
 	 */
-	public NAppletManager nappletManager = null;
+	public NAppletManager parentNAppletManager = null;
+
+	/**
+	 * Manager for this NApplet's contained Nits (e.g., NApplets). Setting this
+	 * up automatically for now, may remove it later on.
+	 */
+	public NAppletManager nappletManager = new NAppletManager(this);
 
 	/**
 	 * The x-position of this NApplet's display space in its parent's display,
@@ -132,8 +139,8 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	 *            y-coordinate of the NApplet
 	 * @param sketchPath
 	 *            home folder for the NApplet (potentially this will be useful
-	 *            later on for napplet-izing an existing processing sketch (need
-	 *            to write a tool for this).
+	 *            later on for napplet-izing an existing processing sketch. I
+	 *            need to write a tool for this).
 	 */
 	protected void initNApplet(PApplet pap, int x, int y, String sketchPath) {
 		parentPApplet = pap;
@@ -261,6 +268,12 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 		initEmbeddedNApplet(pap, 0, 0, pap.sketchPath);
 	}
 
+	/**
+	 * Calls PApplet.addListeners(), and additionally adds a listener for the
+	 * mousewheel.
+	 * 
+	 * @see processing.core.PApplet#addListeners()
+	 */
 	public void addListeners() {
 		super.addListeners();
 		addMouseWheelListener(this);
@@ -324,6 +337,12 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 		return height;
 	}
 
+	/**
+	 * Returns true if the NApplet is currently hidden from view by the
+	 * nappletHidden variable.
+	 * 
+	 * @return true if the NApplet is hidden.
+	 */
 	public boolean isHidden() {
 		return nappletHidden;
 	}
@@ -337,6 +356,11 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 		return embeddedNApplet;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see napplet.Nit#setParentPApplet(PApplet)
+	 */
 	public void setParentPApplet(PApplet pap) {
 		parentPApplet = pap;
 	}
@@ -350,8 +374,13 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 		return parentPApplet;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see napplet.Nit#setManager(NAppletManager)
+	 */
 	public void setManager(NAppletManager nappletManager) {
-		this.nappletManager = nappletManager;
+		this.parentNAppletManager = nappletManager;
 	}
 
 	/*
@@ -400,7 +429,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 		if (windowedNApplet)
 			frame.dispose();
 		if (embeddedNApplet || windowedNApplet)
-			nappletManager.killNit(this);
+			parentNAppletManager.killNit(this);
 		else
 			super.exit();
 	}
@@ -627,30 +656,55 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 			}
 		}
 
-		napplet.nappletManager = nappletManager;
+		napplet.parentNAppletManager = nappletManager;
 		return napplet;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seejava.awt.event.MouseWheelListener#mouseWheelMoved(java.awt.event.
+	 * MouseWheelEvent)
+	 */
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		pmouseWheel = mouseWheel;
 		mouseWheel += e.getWheelRotation();
 		mouseWheelMoved();
 	}
 
+	/**
+	 * Called when the mousewheel is moved. Meant to be overridden a la
+	 * mouseMoved(), mousePressed(), etc.
+	 */
 	public void mouseWheelMoved() {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see napplet.Nit#getNAppletManager()
+	 */
 	@Override
 	public NAppletManager getNAppletManager() {
-		return nappletManager;
+		return parentNAppletManager;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see napplet.Nit#setNAppletManager(napplet.NAppletManager)
+	 */
 	@Override
-	public void setNAppletManager(NAppletManager nitManager) {
-		this.nappletManager = nitManager;
+	public void setNAppletManager(NAppletManager nappletManager) {
+		this.parentNAppletManager = nappletManager;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see napplet.Nit#inputHit(int, int)
+	 */
 	@Override
 	public boolean inputHit(int x, int y) {
 		return true;

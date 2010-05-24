@@ -20,7 +20,7 @@ public interface Nit {
 	 * Returns the x coordinate of the Nit's upper left corner in its parent's
 	 * display space.
 	 * 
-	 * @return
+	 * @return x-coordinate
 	 */
 	public abstract int getPositionX();
 
@@ -28,7 +28,7 @@ public interface Nit {
 	 * Return the y coordinate of the Nit's upper left corner in its parent's
 	 * display space.
 	 * 
-	 * @return
+	 * @return y-coordinate
 	 */
 	public abstract int getPositionY();
 
@@ -45,14 +45,14 @@ public interface Nit {
 	/**
 	 * Return the Nit's width in pixels.
 	 * 
-	 * @return
+	 * @return width of the Nit in pixels
 	 */
 	public abstract int getWidth();
 
 	/**
 	 * Return the Nit's height in pixels.
 	 * 
-	 * @return
+	 * @return height of the Nit in pixels
 	 */
 	public abstract int getHeight();
 
@@ -60,14 +60,16 @@ public interface Nit {
 	 * Tells whether the Nit is embedded in another Nit's display window, or has
 	 * its own window.
 	 * 
-	 * @return
+	 * @return true for an embedded Nit, false for a Nit in its own window
+	 *         (including a NApplet running in standalone mode, i.e., as a
+	 *         PApplet.)
 	 */
 	public abstract boolean isEmbedded();
 
 	/**
 	 * Get the Nit's parent PApplet (or NApplet) object.
 	 * 
-	 * @return
+	 * @return parent PApplet
 	 */
 	public abstract PApplet getParentPApplet();
 
@@ -81,7 +83,7 @@ public interface Nit {
 	/**
 	 * Get the NAppletManager object responsible for handling this Nit.
 	 * 
-	 * @return
+	 * @return managing NAppletManager
 	 */
 	public abstract NAppletManager getNAppletManager();
 
