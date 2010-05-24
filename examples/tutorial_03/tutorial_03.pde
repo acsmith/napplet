@@ -2,7 +2,7 @@
 import napplet.*;
 
 NAppletManager nappletManager;
-PFont mainFont, codeFont;
+PFont mainFont;
 
 // These will be changed by the napplets:
 int nicePressTotal = 0;
@@ -19,7 +19,6 @@ String button2Text =
 void setup() {
   size(400, 200);
   mainFont = loadFont("../../common/data/ArialMT-18.vlw");
-  codeFont = loadFont("../../tutorial_01/data/CourierNewPS-BoldMT-14.vlw");
   textMode(SCREEN);
   textAlign(CENTER, CENTER);
   
@@ -74,14 +73,13 @@ public class NiceWindow extends NApplet {
     size(250, 250);
     nappletCloseable = true;
     textMode(SCREEN);
-    textAlign(CENTER, CENTER);
   }
   
   public void draw() {
     background(0, 100, 0);
     stroke(255);
     fill(255);
-    
+    textAlign(CENTER, CENTER);
     textFont(mainFont);
     text(sketchText, width/2, height/2);
   }
@@ -110,14 +108,13 @@ public class MeanWindow extends NApplet {
     size(250, 250);
     nappletCloseable = false; // Not actually necessary, false by default.
     textMode(SCREEN);
-    textAlign(CENTER, CENTER);
   }
   
   public void draw() {
     background(100, 0, 0);
     stroke(255);
     fill(255);
-    
+    textAlign(CENTER, CENTER);
     textFont(mainFont);
     text(sketchText, width/2, height/2);
   }

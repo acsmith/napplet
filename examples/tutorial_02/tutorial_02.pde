@@ -40,7 +40,7 @@ String codeText =
 void setup() {
   size(600, 400);
   mainFont = loadFont("../../common/data/ArialMT-18.vlw");
-  codeFont = loadFont("../../tutorial_01/data/CourierNewPS-BoldMT-14.vlw");
+  codeFont = loadFont("../../common/data/CourierNewPS-BoldMT-14.vlw");
   textMode(SCREEN);
   textAlign(LEFT, TOP);
   
