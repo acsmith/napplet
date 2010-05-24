@@ -30,13 +30,18 @@ public class NAppletManager implements MouseWheelListener {
 	public NAppletManager(PApplet pap) {
 		super();
 		parentPApplet = pap;
+		
+		if (parentPApplet instanceof NApplet) {
+			((NApplet) parentPApplet).nappletManager = this;
+		}
+		else {
+			parentPApplet.addMouseWheelListener(this);
+		}
+
 		parentPApplet.registerPre(this);
 		parentPApplet.registerDraw(this);
 		parentPApplet.registerMouseEvent(this);
 		parentPApplet.registerKeyEvent(this);
-		if (!(parentPApplet instanceof NApplet)) // NApplets already have
-													// mousewheel functionality.
-			parentPApplet.addMouseWheelListener(this);
 	}
 
 	public void addNit(Nit nit) {
