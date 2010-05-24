@@ -3,12 +3,17 @@ package napplet;
 import static java.awt.event.FocusEvent.FOCUS_GAINED;
 import static java.awt.event.FocusEvent.FOCUS_LOST;
 import static java.awt.event.MouseEvent.MOUSE_DRAGGED;
+import static java.awt.event.MouseEvent.MOUSE_MOVED;
 import static java.awt.event.MouseEvent.MOUSE_RELEASED;
 import static processing.core.PConstants.ARGB;
 
+import java.awt.Component;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
@@ -16,7 +21,11 @@ import java.util.List;
 
 import processing.core.PApplet;
 
-public class NAppletManager implements MouseWheelListener {
+public class NAppletManager implements MouseListener, MouseMotionListener,
+		MouseWheelListener, KeyListener {
+
+	public boolean keyPassthroughPolicy = false;
+	public boolean mousePassthroughPolicy = false;
 
 	List<Nit> nitList = new ArrayList<Nit>();
 	List<Nit> killList = new ArrayList<Nit>();
@@ -30,18 +39,25 @@ public class NAppletManager implements MouseWheelListener {
 	public NAppletManager(PApplet pap) {
 		super();
 		parentPApplet = pap;
-		
+
 		if (parentPApplet instanceof NApplet) {
 			((NApplet) parentPApplet).nappletManager = this;
+		} else {
+
 		}
-		else {
-			parentPApplet.addMouseWheelListener(this);
-		}
+
+		parentPApplet.addMouseWheelListener(this);
 
 		parentPApplet.registerPre(this);
 		parentPApplet.registerDraw(this);
-		parentPApplet.registerMouseEvent(this);
-		parentPApplet.registerKeyEvent(this);
+
+		parentPApplet.removeMouseListener(parentPApplet);
+		parentPApplet.addMouseListener(this);
+		parentPApplet.removeMouseMotionListener(parentPApplet);
+		parentPApplet.addMouseMotionListener(this);
+
+		parentPApplet.removeKeyListener(parentPApplet);
+		parentPApplet.addKeyListener(this);
 	}
 
 	public void addNit(Nit nit) {
@@ -92,56 +108,78 @@ public class NAppletManager implements MouseWheelListener {
 	void passMouseEvent(Nit nit, MouseEvent event) {
 		event.translatePoint(-(nit.getPositionX()), -(nit.getPositionY()));
 		nit.passEvent(event);
+		event.translatePoint(nit.getPositionX(), nit.getPositionY());
 	}
 
-	public void mouseEvent(MouseEvent event) {
-		mouseX = event.getX();
-		mouseY = event.getY();
-
+	public void handleMouseEvent(MouseEvent e) {
+		mouseX = e.getX();
+		mouseY = e.getY();
+		int id = e.getID();
 		Nit nit = containingNit(mouseX, mouseY);
-		if (((event.getID() == MOUSE_DRAGGED) || (event.getID() == MOUSE_RELEASED))
-				&& (mouseNit != null)) {
-			passMouseEvent(mouseNit, event);
-		} else if (nit != null) {
-			passMouseEvent(nit, event);
+
+		if (nit != focusNit) {
+			NApplet focusGainer = (nit instanceof NApplet) ? (NApplet) nit
+					: null;
+			NApplet focusLoser = (focusNit instanceof NApplet) ? (NApplet) focusNit
+					: null;
+			if (nit instanceof NApplet)
+				nit.focusGained(new FocusEvent(focusGainer, FOCUS_GAINED,
+						false, focusLoser));
+			if (focusNit instanceof NApplet)
+				focusNit.focusLost(new FocusEvent(focusLoser, FOCUS_LOST,
+						false, focusGainer));
+			focusNit = nit;
+		}
+
+		if (mouseNit != null && id == MOUSE_RELEASED) {
+			passMouseEvent(mouseNit, e);
 			mouseNit = nit;
-			if (nit != focusNit) {
-				Nit focusGainingNit = (nit instanceof NApplet) ? nit : null;
-				Nit focusLosingNit = (focusNit instanceof NApplet) ? focusNit
-						: null;
-				if (focusGainingNit != null) {
-					FocusEvent gainFocus = new FocusEvent(
-							(NApplet) focusGainingNit, FOCUS_GAINED, false,
-							(NApplet) focusLosingNit);
-					focusGainingNit.focusGained(gainFocus);
-				}
-				if (focusLosingNit != null) {
-					FocusEvent loseFocus = new FocusEvent(
-							(NApplet) focusLosingNit, FOCUS_LOST, false,
-							(NApplet) focusGainingNit);
-					focusLosingNit.focusLost(loseFocus);
-				}
-				focusNit = nit;
+		}
+		if (mouseNit == null)
+			mouseNit = nit;
+
+		if (nit != null) {
+			if (id == MOUSE_DRAGGED) {
+				MouseEvent moveEvent = new MouseEvent(
+						(Component) e.getSource(), MOUSE_MOVED, e.getWhen(), e
+								.getModifiers(), e.getX(), e.getY(), e
+								.getClickCount(), e.isPopupTrigger(), e
+								.getButton());
+				parentPApplet.mouseMoved(moveEvent);
+
+			}
+			passMouseEvent(nit, e);
+		}
+
+		if ((nit == null) || (!e.isConsumed() && mousePassthroughPolicy)) {
+			parentPApplet.mousePressed(e);
+		}
+	}
+
+	public void handleMouseWheelEvent(MouseWheelEvent e) {
+		if (focusNit != null) {
+			focusNit.passEvent(e);
+		}
+		if (focusNit == null || (!e.isConsumed() && mousePassthroughPolicy)) {
+			if (parentPApplet instanceof NApplet) {
+				((NApplet) parentPApplet).mouseWheelMoved(e);
 			}
 		}
 	}
 
-	public void keyEvent(KeyEvent event) {
+	public void handleKeyEvent(KeyEvent e) {
 		if (focusNit != null) {
-			focusNit.passEvent(event);
+			focusNit.passEvent(e);
 		}
-	}
-
-	public void mouseWheelEvent(MouseWheelEvent event) {
-		if (focusNit != null) {
-			focusNit.passEvent(event);
+		if (focusNit == null || (!e.isConsumed() && keyPassthroughPolicy)) {
+			parentPApplet.keyPressed(e);
 		}
 	}
 
 	public void createNApplet(String nappletClassName, int x, int y) {
 		createEmbeddedNApplet(nappletClassName, x, y);
 	}
-	
+
 	public void createEmbeddedNApplet(String nappletClassName, int x, int y) {
 		NApplet nap = NApplet.createNApplet(parentPApplet, nappletClassName,
 				this);
@@ -171,7 +209,57 @@ public class NAppletManager implements MouseWheelListener {
 	}
 
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		mouseWheelEvent(e);
+		handleMouseWheelEvent(e);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		handleMouseEvent(e);
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		handleMouseEvent(e);
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		handleMouseEvent(e);
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		handleMouseEvent(e);
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		handleMouseEvent(e);
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		handleMouseEvent(e);
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		handleMouseEvent(e);
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		handleKeyEvent(e);
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		handleKeyEvent(e);
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		handleKeyEvent(e);
 	}
 
 }

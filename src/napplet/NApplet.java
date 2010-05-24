@@ -175,7 +175,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 			setSize(w, h);
 			setPreferredSize(new Dimension(w, h));
 		}
-		
+
 		nappletManager = new NAppletManager(this);
 	}
 
@@ -484,19 +484,20 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	 */
 	public void passEvent(InputEvent event) {
 		if (event instanceof MouseWheelEvent) {
-			if (nappletManager!=null)
-				nappletManager.mouseWheelEvent((MouseWheelEvent) event);
-			this.mouseWheelMoved((MouseWheelEvent) event);
-		}
-		else if (event instanceof MouseEvent) {
-			if (nappletManager!=null)
-				nappletManager.mouseEvent((MouseEvent) event);
-			this.enqueueMouseEvent((MouseEvent) event);
-		}
-		else if (event instanceof java.awt.event.KeyEvent) {
-			if (nappletManager!=null)
-				nappletManager.keyEvent((KeyEvent) event);
-			this.enqueueKeyEvent((KeyEvent) event);
+			if (nappletManager != null)
+				nappletManager.handleMouseWheelEvent((MouseWheelEvent) event);
+			else
+				this.mouseWheelMoved((MouseWheelEvent) event);
+		} else if (event instanceof MouseEvent) {
+			if (nappletManager != null)
+				nappletManager.handleMouseEvent((MouseEvent) event);
+			else
+				this.mousePressed((MouseEvent) event);
+		} else if (event instanceof java.awt.event.KeyEvent) {
+			if (nappletManager != null)
+				nappletManager.handleKeyEvent((KeyEvent) event);
+			else
+				this.keyPressed((KeyEvent) event);
 		}
 	}
 

@@ -124,7 +124,7 @@ public interface Nit {
 	 * @param event
 	 */
 	public abstract void passEvent(InputEvent event);
-
+	
 	/**
 	 * Inform the Nit that it's gained focus.
 	 * 
