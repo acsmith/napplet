@@ -281,7 +281,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see napplet.Nibble#getPositionX()
+	 * @see napplet.Nit#getPositionX()
 	 */
 	public int getPositionX() {
 		return nappletX;
@@ -290,7 +290,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see napplet.Nibble#getPositionY()
+	 * @see napplet.Nit#getPositionY()
 	 */
 	public int getPositionY() {
 		return nappletY;
@@ -299,7 +299,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see napplet.Nibble#setPosition(int, int)
+	 * @see napplet.Nit#setPosition(int, int)
 	 */
 	public void setPosition(int x, int y) {
 		nappletX = x;
@@ -309,7 +309,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see napplet.Nibble#getWidth()
+	 * @see napplet.Nit#getWidth()
 	 */
 	public int getWidth() {
 		return width;
@@ -318,7 +318,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see napplet.Nibble#getHeight()
+	 * @see napplet.Nit#getHeight()
 	 */
 	public int getHeight() {
 		return height;
@@ -331,7 +331,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see napplet.Nibble#isEmbedded()
+	 * @see napplet.Nit#isEmbedded()
 	 */
 	public boolean isEmbedded() {
 		return embeddedNApplet;
@@ -344,7 +344,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see napplet.Nibble#getParentPApplet()
+	 * @see napplet.Nit#getParentPApplet()
 	 */
 	public PApplet getParentPApplet() {
 		return parentPApplet;
@@ -357,7 +357,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see napplet.Nibble#runFrame()
+	 * @see napplet.Nit#runFrame()
 	 */
 	public void runFrame() {
 		handleDraw();
