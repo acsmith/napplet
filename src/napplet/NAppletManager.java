@@ -105,10 +105,11 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 		}
 	}
 
-	void passMouseEvent(Nit nit, MouseEvent event) {
-		event.translatePoint(-(nit.getPositionX()), -(nit.getPositionY()));
-		nit.passEvent(event);
-		event.translatePoint(nit.getPositionX(), nit.getPositionY());
+	void passMouseEvent(Nit nit, MouseEvent e) {
+		MouseEvent ep = new MouseEvent((Component) (e.getSource()), e.getID(), e.getWhen(), 
+				e.getModifiers(), e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton());
+		ep.translatePoint(-(nit.getPositionX()), -(nit.getPositionY()));
+		nit.passEvent(ep);
 	}
 
 	public void handleMouseEvent(MouseEvent e) {

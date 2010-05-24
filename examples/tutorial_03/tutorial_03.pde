@@ -18,8 +18,8 @@ String button2Text =
 
 void setup() {
   size(400, 200);
-  mainFont = loadFont("ArialMT-18.vlw");
-  codeFont = loadFont("CourierNewPS-BoldMT-14.vlw");
+  mainFont = loadFont("../../common/data/ArialMT-18.vlw");
+  codeFont = loadFont("../../tutorial_01/data/CourierNewPS-BoldMT-14.vlw");
   textMode(SCREEN);
   textAlign(CENTER, CENTER);
   
