@@ -71,7 +71,7 @@ public class FireCube extends NApplet {
 	}
 
 	public void draw() {
-		colorMode(RGB);
+		//colorMode(RGB);
 		angle = angle + 0.05f;
 
 		// Rotating wireframe cube
