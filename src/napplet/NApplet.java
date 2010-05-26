@@ -22,20 +22,20 @@ import processing.core.PImage;
  * @author acsmith
  * 
  */
-/**
- * @author acsmith
- *
- */
-/**
- * @author acsmith
- * 
- */
 @SuppressWarnings( { "serial" })
 public class NApplet extends PApplet implements Nit, MouseWheelListener,
 		ComponentListener {
 
-	public static final String VERSION = "0.3.0";
+	/**
+	 * Library version.
+	 */
+	public static final String VERSION = "0.3.1";
 
+	/**
+	 * Returns library version.
+	 * 
+	 * @return version
+	 */
 	public String version() {
 		return VERSION;
 	}
@@ -408,8 +408,19 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 			exit();
 	}
 
+	/**
+	 * Sets a windowed or stand-alone NApplet to be user-resizable. Has no
+	 * effect on an embedded NApplet.
+	 * 
+	 * When a NApplet is resized, it will call the windowResized() method, which
+	 * is empty by default and can be overriden with whatever you like.
+	 * 
+	 * @param resizable
+	 *            true if the window should be user-resizable.
+	 */
 	public void setResizable(boolean resizable) {
-		frame.setResizable(resizable);
+		if (!embeddedNApplet)
+			frame.setResizable(resizable);
 	}
 
 	/**
@@ -489,6 +500,21 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 		}
 	}
 
+	/**
+	 * Overrides PApplet's colorMode(int mode) method.
+	 * 
+	 * For some reason, a NApplet that called colorMode(HSB) in its setup()
+	 * without specifying a max range for the color values would have those
+	 * ranges set to zero. (The NApplet version of the FireCube demo had this
+	 * problem.) This method intercepts a call to colorMode with no range
+	 * specification, checks to see if g currently has any ranges specified,
+	 * fills any missing ranges in with 255, and then calls
+	 * PApplet.colorMode(int, float, float, float, float) to set them
+	 * explicitly.
+	 * 
+	 * @see processing.core.PApplet#colorMode(int)
+	 */
+	@Override
 	public void colorMode(int mode) {
 
 		// Need to make sure sensible values get passed for the max color ranges
@@ -751,7 +777,8 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 			super.noCursor();
 	}
 
-	// Listener methods
+	// Listener methods (as with listener methods for PApplet, override these at
+	// your own risk.)
 
 	/*
 	 * (non-Javadoc)
