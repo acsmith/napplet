@@ -7,6 +7,8 @@ import static java.awt.event.MouseEvent.MOUSE_MOVED;
 import static java.awt.event.MouseEvent.MOUSE_RELEASED;
 
 import java.awt.Component;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -21,7 +23,7 @@ import java.util.List;
 import processing.core.PApplet;
 
 public class NAppletManager implements MouseListener, MouseMotionListener,
-		MouseWheelListener, KeyListener {
+		MouseWheelListener, KeyListener, ComponentListener {
 
 	public boolean keyPassthroughPolicy = false;
 	public boolean mousePassthroughPolicy = false;
@@ -42,10 +44,8 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 		if (parentPApplet instanceof NApplet) {
 			((NApplet) parentPApplet).nappletManager = this;
 		} else {
-
+			parentPApplet.addMouseWheelListener(this);
 		}
-
-		parentPApplet.addMouseWheelListener(this);
 
 		parentPApplet.registerPre(this);
 		parentPApplet.registerDraw(this);
@@ -263,6 +263,24 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 	@Override
 	public void keyTyped(KeyEvent e) {
 		handleKeyEvent(e);
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent arg0) {		
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent arg0) {
+	}
+
+	@Override
+	public void componentResized(ComponentEvent arg0) {
+		//System.out.println("Resized!");
+		
+	}
+
+	@Override
+	public void componentShown(ComponentEvent arg0) {		
 	}
 
 }
