@@ -188,6 +188,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 		}
 
 		nappletManager = new NAppletManager(this);
+
 	}
 
 	/**
@@ -248,6 +249,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 
 		// Do setup now, so the Frame can get width and height. Then advance the
 		// frameCount once, so PApplet.handleDraw() doesn't run it again.
+
 		setup();
 		frameCount++;
 
@@ -455,11 +457,50 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 				}
 			}
 		} else {
+
+			// This is for standalone and windowed napplets. Basically cribbed
+			// all this from PApplet.size(), but replaced the
+			// exception-throwing.
+
 			setSize(iwidth, iheight);
 			setPreferredSize(new Dimension(iwidth, iheight));
+			if (ipath != null)
+				ipath = savePath(ipath);
 
-			super.size(iwidth, iheight, irenderer, ipath);
+			String currentRenderer = g.getClass().getName();
+			if (currentRenderer.equals(irenderer)) {
+				resizeRenderer(iwidth, iheight);
+			} else {
+
+				g = makeGraphics(iwidth, iheight, irenderer, ipath, true);
+				width = iwidth;
+				height = iheight;
+
+				defaultSize = false;
+
+				// The PApplet throws a custom exception here to force a re-run
+				// of setup(). If we allow the NApplet to do that, it will be
+				// caught by the parent PApplet, causing all kinds of
+				// unfortunate side effects. So instead, we force a re-run of
+				// setup() by simply decrementing frameCount.
+
+				frameCount--;
+			}
 		}
+	}
+
+	public void colorMode(int mode) {
+
+		// Need to make sure sensible values get passed for the max color ranges
+		// if they aren't set already. (I'm not sure why they don't get set, but
+		// whatever.)
+
+		float maxX = (g.colorModeX == 0.0) ? 255 : g.colorModeX;
+		float maxY = (g.colorModeY == 0.0) ? 255 : g.colorModeY;
+		float maxZ = (g.colorModeZ == 0.0) ? 255 : g.colorModeZ;
+		float maxA = (g.colorModeA == 0.0) ? 255 : g.colorModeA;
+
+		super.colorMode(mode, maxX, maxY, maxZ, maxA);
 	}
 
 	/**
@@ -566,7 +607,8 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 			}
 		}
 
-		napplet.parentNAppletManager = nappletManager;
+		napplet.setNAppletManager(nappletManager);
+		// napplet.parentNAppletManager = nappletManager;
 		return napplet;
 	}
 
@@ -752,8 +794,10 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 	 */
 	@Override
 	public void componentResized(ComponentEvent e) {
-		int iwidth = e.getComponent().getHeight();
-		int iheight = e.getComponent().getHeight();
+		java.awt.Insets insets = frame.getInsets();
+		int iwidth = e.getComponent().getWidth() - (insets.left + insets.right);
+		int iheight = e.getComponent().getHeight()
+				- (insets.top + insets.bottom);
 		resizeRenderer(iwidth, iheight);
 		windowResized();
 	}

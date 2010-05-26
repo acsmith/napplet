@@ -5,7 +5,6 @@ import static java.awt.event.FocusEvent.FOCUS_LOST;
 import static java.awt.event.MouseEvent.MOUSE_DRAGGED;
 import static java.awt.event.MouseEvent.MOUSE_MOVED;
 import static java.awt.event.MouseEvent.MOUSE_RELEASED;
-import static processing.core.PConstants.ARGB;
 
 import java.awt.Component;
 import java.awt.event.FocusEvent;
@@ -105,8 +104,9 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 	}
 
 	void passMouseEvent(Nit nit, MouseEvent e) {
-		MouseEvent ep = new MouseEvent((Component) (e.getSource()), e.getID(), e.getWhen(), 
-				e.getModifiers(), e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton());
+		MouseEvent ep = new MouseEvent((Component) (e.getSource()), e.getID(),
+				e.getWhen(), e.getModifiers(), e.getX(), e.getY(), e
+						.getClickCount(), e.isPopupTrigger(), e.getButton());
 		ep.translatePoint(-(nit.getPositionX()), -(nit.getPositionY()));
 		nit.passEvent(ep);
 	}
@@ -176,21 +176,23 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 		}
 	}
 
-	public void createNApplet(String nappletClassName, int x, int y) {
-		createEmbeddedNApplet(nappletClassName, x, y);
+	public NApplet createNApplet(String nappletClassName, int x, int y) {
+		return createEmbeddedNApplet(nappletClassName, x, y);
 	}
 
-	public void createEmbeddedNApplet(String nappletClassName, int x, int y) {
+	public NApplet createEmbeddedNApplet(String nappletClassName, int x, int y) {
 		NApplet nap = NApplet.createNApplet(parentPApplet, nappletClassName,
 				this);
 		if (nap != null) {
 			nap.initEmbeddedNApplet(parentPApplet, x, y);
 			addNit(nap);
-			nap.g.format = ARGB;
+			if (nap.g.format == processing.core.PConstants.RGB)
+				nap.g.format = processing.core.PConstants.ARGB;
 		}
+		return nap;
 	}
 
-	public void createWindowedNApplet(String nappletClassName, int x, int y) {
+	public NApplet createWindowedNApplet(String nappletClassName, int x, int y) {
 		NApplet nap = NApplet.createNApplet(parentPApplet, nappletClassName,
 				this);
 		if (nap != null) {
@@ -198,6 +200,7 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 			NFrame nFrame = new NFrame(parentPApplet, nap, x, y);
 			addNit(nap);
 		}
+		return nap;
 	}
 
 	public void killNit(Nit nit) {

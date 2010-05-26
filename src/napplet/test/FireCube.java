@@ -33,7 +33,9 @@ public class FireCube extends NApplet {
 		size(200, 200, P2D);
 
 		// Create buffered image for 3d cube
+
 		pg = createGraphics(width, height, P3D);
+
 
 		calc1 = new int[width];
 		calc3 = new int[width];
@@ -52,6 +54,7 @@ public class FireCube extends NApplet {
 			// Saturation is always the maximum: 255
 			// Lightness is 0..255 for x=0..128, and 255 for x=128..255
 			palette[x] = color(x / 3, 255, constrain(x * 3, 0, 255));
+
 		}
 
 		// Precalculate which pixel values to add during animation loop
@@ -67,11 +70,11 @@ public class FireCube extends NApplet {
 			calc5[y] = (y + 2) % height;
 		}
 		
-		println("FireCube setup, colorMode = " + g.colorMode);
+		
 	}
 
 	public void draw() {
-		colorMode(HSB);
+		//colorMode(HSB);
 		angle = angle + 0.05f;
 
 		// Rotating wireframe cube
@@ -115,12 +118,9 @@ public class FireCube extends NApplet {
 			}
 		}
 		updatePixels();
-		println(hex(pixels[0]));
-		System.out.println("FireCube draw(), colorMode = " + g.colorMode);
 	}
 	
 	protected void paint() {
-		println("Painting FireCube");
 		super.paint();
 	}
 }
