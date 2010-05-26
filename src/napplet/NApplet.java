@@ -22,6 +22,14 @@ import processing.core.PImage;
  * @author acsmith
  * 
  */
+/**
+ * @author acsmith
+ *
+ */
+/**
+ * @author acsmith
+ * 
+ */
 @SuppressWarnings( { "serial" })
 public class NApplet extends PApplet implements Nit, MouseWheelListener,
 		ComponentListener {
@@ -123,7 +131,8 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 
 	/**
 	 * Base constructor. Use initEmbeddedNApplet() or initWindowedNApplet() to
-	 * initialize a NApplet.
+	 * initialize a NApplet. Override this to have a custom constructor for a
+	 * subclass using parameters (e.g., to initialize fields).
 	 */
 	public NApplet() {
 	}
@@ -396,7 +405,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 		if (nappletCloseable)
 			exit();
 	}
-	
+
 	public void setResizable(boolean resizable) {
 		frame.setResizable(resizable);
 	}
@@ -497,6 +506,121 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 	}
 
 	/**
+	 * NApplet factory method.
+	 * 
+	 * @param parent
+	 *            Parent PApplet or NApplet for the new NApplet.
+	 * @param nappletClassName
+	 *            Name of the new NApplet's class.
+	 * @return The created NApplet.
+	 */
+	public static NApplet createNApplet(PApplet parent,
+			String nappletClassName, NAppletManager nappletManager) {
+		Class<?> nappletClass = null;
+		Constructor<?> constructor = null;
+		Class<?>[] constructorParams = {};
+		Object[] constructorArgs = {};
+		NApplet napplet = null;
+
+		try {
+			nappletClass = Class.forName(nappletClassName);
+		} catch (ClassNotFoundException e) {
+			try {
+				nappletClass = Class.forName(parent.getClass().getName() + "$"
+						+ nappletClassName);
+			} catch (ClassNotFoundException e1) {
+				String pcName = parent.getClass().getName();
+				try {
+					nappletClass = Class.forName(pcName.substring(0, pcName
+							.lastIndexOf('.'))
+							+ "." + nappletClassName);
+				} catch (ClassNotFoundException e2) {
+					System.err
+							.println("NApplet.createNapplet(): Class not found.");
+					e2.printStackTrace();
+				}
+			}
+		}
+
+		if (nappletClass != null) {
+			if (nappletClass.getName().contains("$")) {
+				constructorParams = new Class[] { parent.getClass() };
+				constructorArgs = new Object[] { parent };
+			}
+			try {
+				constructor = nappletClass.getConstructor(constructorParams);
+			} catch (Exception e) {
+				System.err
+						.println("NApplet.createNApplet(): Constructor access error.");
+				e.printStackTrace();
+			}
+		}
+
+		if (constructor != null) {
+			try {
+				napplet = (NApplet) constructor.newInstance(constructorArgs);
+			} catch (Exception e) {
+				System.err
+						.println("NApplet.createNApplet(): Object instantiation error.");
+				e.printStackTrace();
+			}
+		}
+
+		napplet.parentNAppletManager = nappletManager;
+		return napplet;
+	}
+
+	/**
+	 * Called when the mousewheel is moved. Meant to be overridden a la
+	 * mouseMoved(), mousePressed(), etc.
+	 */
+	public void mouseWheelMoved() {
+	}
+
+	/**
+	 * Called when the window is resized. Override this when you want the
+	 * NApplet to do something after a resize.
+	 */
+	public void windowResized() {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see napplet.Nit#getNAppletManager()
+	 */
+	@Override
+	public NAppletManager getNAppletManager() {
+		return parentNAppletManager;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see napplet.Nit#setNAppletManager(napplet.NAppletManager)
+	 */
+	@Override
+	public void setNAppletManager(NAppletManager nappletManager) {
+		this.parentNAppletManager = nappletManager;
+		this.parentPApplet = nappletManager.parentPApplet;
+		millisOffset = parentPApplet.millis();
+		online = parentPApplet.online;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see napplet.Nit#inputHit(int, int)
+	 */
+	@Override
+	public boolean inputHit(int x, int y) {
+		return true;
+	}
+
+	// Overrides for methods inherited from PApplet that are disabled for
+	// NApplets because they're either inappropriate or too tricky.
+
+	/**
 	 * Overrides PApplet.delay(). For now, this just means delay() is disabled
 	 * for embedded NApplets. For standalone NApplets, this just passes through
 	 * to PApplet.delay().
@@ -585,70 +709,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 			super.noCursor();
 	}
 
-	/**
-	 * NApplet factory method.
-	 * 
-	 * @param parent
-	 *            Parent PApplet or NApplet for the new NApplet.
-	 * @param nappletClassName
-	 *            Name of the new NApplet's class.
-	 * @return The created NApplet.
-	 */
-	public static NApplet createNApplet(PApplet parent,
-			String nappletClassName, NAppletManager nappletManager) {
-		Class<?> nappletClass = null;
-		Constructor<?> constructor = null;
-		Class<?>[] constructorParams = {};
-		Object[] constructorArgs = {};
-		NApplet napplet = null;
-
-		try {
-			nappletClass = Class.forName(nappletClassName);
-		} catch (ClassNotFoundException e) {
-			try {
-				nappletClass = Class.forName(parent.getClass().getName() + "$"
-						+ nappletClassName);
-			} catch (ClassNotFoundException e1) {
-				String pcName = parent.getClass().getName();
-				try {
-					nappletClass = Class.forName(pcName.substring(0, pcName
-							.lastIndexOf('.'))
-							+ "." + nappletClassName);
-				} catch (ClassNotFoundException e2) {
-					System.err
-							.println("NApplet.createNapplet(): Class not found.");
-					e2.printStackTrace();
-				}
-			}
-		}
-
-		if (nappletClass != null) {
-			if (nappletClass.getName().contains("$")) {
-				constructorParams = new Class[] { parent.getClass() };
-				constructorArgs = new Object[] { parent };
-			}
-			try {
-				constructor = nappletClass.getConstructor(constructorParams);
-			} catch (Exception e) {
-				System.err
-						.println("NApplet.createNApplet(): Constructor access error.");
-				e.printStackTrace();
-			}
-		}
-
-		if (constructor != null) {
-			try {
-				napplet = (NApplet) constructor.newInstance(constructorArgs);
-			} catch (Exception e) {
-				System.err
-						.println("NApplet.createNApplet(): Object instantiation error.");
-				e.printStackTrace();
-			}
-		}
-
-		napplet.parentNAppletManager = nappletManager;
-		return napplet;
-	}
+	// Listener methods
 
 	/*
 	 * (non-Javadoc)
@@ -662,61 +723,33 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 		mouseWheelMoved();
 	}
 
-	/**
-	 * Called when the mousewheel is moved. Meant to be overridden a la
-	 * mouseMoved(), mousePressed(), etc.
-	 */
-	public void mouseWheelMoved() {
-	}
-
-	/**
-	 * Called when the window is resized. Override this when you want the
-	 * NApplet to do something after a resize.
-	 */
-	public void windowResized() {
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see napplet.Nit#getNAppletManager()
+	 * @seejava.awt.event.ComponentListener#componentHidden(java.awt.event.
+	 * ComponentEvent)
 	 */
-	@Override
-	public NAppletManager getNAppletManager() {
-		return parentNAppletManager;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see napplet.Nit#setNAppletManager(napplet.NAppletManager)
-	 */
-	@Override
-	public void setNAppletManager(NAppletManager nappletManager) {
-		this.parentNAppletManager = nappletManager;
-		this.parentPApplet = nappletManager.parentPApplet;
-		millisOffset = parentPApplet.millis();
-		online = parentPApplet.online;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see napplet.Nit#inputHit(int, int)
-	 */
-	@Override
-	public boolean inputHit(int x, int y) {
-		return true;
-	}
-
 	@Override
 	public void componentHidden(ComponentEvent arg0) {
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * java.awt.event.ComponentListener#componentMoved(java.awt.event.ComponentEvent
+	 * )
+	 */
 	@Override
 	public void componentMoved(ComponentEvent e) {
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seejava.awt.event.ComponentListener#componentResized(java.awt.event.
+	 * ComponentEvent)
+	 */
 	@Override
 	public void componentResized(ComponentEvent e) {
 		int iwidth = e.getComponent().getHeight();
@@ -725,6 +758,13 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 		windowResized();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * java.awt.event.ComponentListener#componentShown(java.awt.event.ComponentEvent
+	 * )
+	 */
 	@Override
 	public void componentShown(ComponentEvent e) {
 	}
