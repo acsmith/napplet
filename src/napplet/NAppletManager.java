@@ -62,7 +62,6 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 
 	public void addNit(Nit nit) {
 		nit.setNAppletManager(this);
-		nit.setParentPApplet(parentPApplet);
 		nitList.add(nit);
 		if (!(nit instanceof NApplet))
 			nit.setup();

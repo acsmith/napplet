@@ -3,8 +3,6 @@ package napplet;
 import java.awt.event.FocusEvent;
 import java.awt.event.InputEvent;
 
-import processing.core.PApplet;
-
 /**
  * Interface for objects managed by NAppletManager. Applies to NApplets
  * obviously, but can also be used for lighter objects, even those without their
@@ -65,20 +63,6 @@ public interface Nit {
 	 *         PApplet.)
 	 */
 	public abstract boolean isEmbedded();
-
-	/**
-	 * Get the Nit's parent PApplet (or NApplet) object.
-	 * 
-	 * @return parent PApplet
-	 */
-	public abstract PApplet getParentPApplet();
-
-	/**
-	 * Set the Nit's parent PApplet (or NApplet) object.
-	 * 
-	 * @param parentPApplet
-	 */
-	public abstract void setParentPApplet(PApplet parentPApplet);
 
 	/**
 	 * Get the NAppletManager object responsible for handling this Nit.

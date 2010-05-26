@@ -45,14 +45,6 @@ public abstract class NitBase implements Nit, PConstants {
 		this.nappletManager = nappletManager;
 	}
 
-	public PApplet getParentPApplet() {
-		return parentPApplet;
-	}
-
-	public void setParentPApplet(PApplet parentPApplet) {
-		this.parentPApplet = parentPApplet;
-	}
-
 	public int getPositionX() {
 		return nitX;
 	}

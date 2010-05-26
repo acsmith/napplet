@@ -2,6 +2,8 @@ package napplet;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -21,7 +23,8 @@ import processing.core.PImage;
  * 
  */
 @SuppressWarnings( { "serial" })
-public class NApplet extends PApplet implements Nit, MouseWheelListener {
+public class NApplet extends PApplet implements Nit, MouseWheelListener,
+		ComponentListener {
 
 	public static final String VERSION = "0.3.0";
 
@@ -119,8 +122,8 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	public int pmouseWheel = 0;
 
 	/**
-	 * Do-nothing constructor. Use initEmbeddedNApplet() or
-	 * initWindowedNApplet() to initialize a NApplet.
+	 * Base constructor. Use initEmbeddedNApplet() or initWindowedNApplet() to
+	 * initialize a NApplet.
 	 */
 	public NApplet() {
 	}
@@ -143,9 +146,9 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	 */
 	protected void initNApplet(PApplet pap, int x, int y, String sketchPath) {
 		parentPApplet = pap;
-
 		// Have to do this because PApplet.millisOffset is private.
 		millisOffset = parentPApplet.millis();
+		online = parentPApplet.online;
 
 		// Everything else is basically just transplanted initialization stuff
 		// from PApplet.init().
@@ -162,8 +165,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 		keyEventMethods = new RegisteredMethods();
 		disposeMethods = new RegisteredMethods();
 
-		online = parentPApplet.online;
-
+		// Transplanted from PApplet.init().
 		this.sketchPath = sketchPath;
 		nappletX = x;
 		nappletY = y;
@@ -360,33 +362,6 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see napplet.Nit#setParentPApplet(PApplet)
-	 */
-	public void setParentPApplet(PApplet pap) {
-		parentPApplet = pap;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see napplet.Nit#getParentPApplet()
-	 */
-	public PApplet getParentPApplet() {
-		return parentPApplet;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see napplet.Nit#setManager(NAppletManager)
-	 */
-	public void setManager(NAppletManager nappletManager) {
-		this.parentNAppletManager = nappletManager;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see napplet.Nit#runFrame()
 	 */
 	public void runFrame() {
@@ -420,6 +395,10 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	public void userWindowClose() {
 		if (nappletCloseable)
 			exit();
+	}
+	
+	public void setResizable(boolean resizable) {
+		frame.setResizable(resizable);
 	}
 
 	/**
@@ -688,7 +667,13 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	 * mouseMoved(), mousePressed(), etc.
 	 */
 	public void mouseWheelMoved() {
+	}
 
+	/**
+	 * Called when the window is resized. Override this when you want the
+	 * NApplet to do something after a resize.
+	 */
+	public void windowResized() {
 	}
 
 	/*
@@ -709,6 +694,9 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	@Override
 	public void setNAppletManager(NAppletManager nappletManager) {
 		this.parentNAppletManager = nappletManager;
+		this.parentPApplet = nappletManager.parentPApplet;
+		millisOffset = parentPApplet.millis();
+		online = parentPApplet.online;
 	}
 
 	/*
@@ -719,6 +707,26 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener {
 	@Override
 	public boolean inputHit(int x, int y) {
 		return true;
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent arg0) {
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent e) {
+	}
+
+	@Override
+	public void componentResized(ComponentEvent e) {
+		int iwidth = e.getComponent().getHeight();
+		int iheight = e.getComponent().getHeight();
+		resizeRenderer(iwidth, iheight);
+		windowResized();
+	}
+
+	@Override
+	public void componentShown(ComponentEvent e) {
 	}
 
 }
