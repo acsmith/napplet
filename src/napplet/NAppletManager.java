@@ -36,20 +36,31 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 	Nit focusNit;
 	Nit mouseNit;
 	public int mouseX, mouseY;
-
+	
+	public boolean componentListenerInitialized = false;
+	
+	public boolean resizeModeChangeRequested = false;
+	public boolean resizeModeRequested;
+	
+	public boolean resizeRequested = false;
+	public int resizeWidth;
+	public int resizeHeight;
+	
 	public NAppletManager(PApplet pap) {
 		super();
 		parentPApplet = pap;
 
 		if (parentPApplet instanceof NApplet) {
 			((NApplet) parentPApplet).nappletManager = this;
+			componentListenerInitialized = true;
 		} else {
 			parentPApplet.addMouseWheelListener(this);
 		}
 
 		parentPApplet.registerPre(this);
 		parentPApplet.registerDraw(this);
-
+		parentPApplet.registerPost(this);
+		
 		parentPApplet.removeMouseListener(parentPApplet);
 		parentPApplet.addMouseListener(this);
 		parentPApplet.removeMouseMotionListener(parentPApplet);
@@ -103,6 +114,20 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 		}
 	}
 
+	public void post() {
+		if (resizeModeChangeRequested && parentPApplet.frame != null) {
+			parentPApplet.frame.setResizable(resizeModeRequested);
+			resizeModeChangeRequested = false;
+		}
+		
+		if (!(componentListenerInitialized) && (parentPApplet.getParent()!=null)) {
+			System.out.println("   Initializing component listener.");
+			parentPApplet.getParent().addComponentListener(this);
+			componentListenerInitialized = true;
+			
+		}
+	}
+	
 	void passMouseEvent(Nit nit, MouseEvent e) {
 		MouseEvent ep = new MouseEvent((Component) (e.getSource()), e.getID(),
 				e.getWhen(), e.getModifiers(), e.getX(), e.getY(), e
@@ -192,6 +217,16 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 		return nap;
 	}
 
+	public void setResizable(boolean resizable) {
+		if (parentPApplet instanceof NApplet)
+			((NApplet) parentPApplet).setResizable(resizable);
+		else {
+			resizeModeChangeRequested = true;
+			resizeModeRequested = resizable;
+		}
+		
+	}
+
 	public NApplet createWindowedNApplet(String nappletClassName, int x, int y) {
 		NApplet nap = NApplet.createNApplet(parentPApplet, nappletClassName,
 				this);
@@ -266,7 +301,7 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 	}
 
 	@Override
-	public void componentHidden(ComponentEvent arg0) {		
+	public void componentHidden(ComponentEvent arg0) {
 	}
 
 	@Override
@@ -275,12 +310,12 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 
 	@Override
 	public void componentResized(ComponentEvent arg0) {
-		//System.out.println("Resized!");
-		
+		System.out.println("Resized!");
+
 	}
 
 	@Override
-	public void componentShown(ComponentEvent arg0) {		
+	public void componentShown(ComponentEvent arg0) {
 	}
 
 }

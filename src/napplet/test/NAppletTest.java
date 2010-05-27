@@ -15,6 +15,8 @@ public class NAppletTest extends PApplet {
 		nappletManager.createEmbeddedNApplet("SwingBlock", 75, 75);
 		nappletManager.createEmbeddedNApplet("SwingBlock", 175, 25);
 		nappletManager.createWindowedNApplet("SwingBlock", 500, 300);
+		
+		nappletManager.setResizable(true);
 	}
 	
 	public void draw() {
