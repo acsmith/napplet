@@ -129,6 +129,10 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 	 */
 	public int pmouseWheel = 0;
 
+	protected boolean resizeRequest = false;
+	protected int resizeWidth;
+	protected int resizeHeight;
+	
 	/**
 	 * Base constructor. Use initEmbeddedNApplet() or initWindowedNApplet() to
 	 * initialize a NApplet. Override this to have a custom constructor for a
@@ -375,8 +379,19 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 	 * 
 	 * @see napplet.Nit#runFrame()
 	 */
-	public void runFrame() {
+	public void runFrame() {	
+		if (resizeRequest) {
+			//resizeRenderer(resizeWidth, resizeHeight);
+			//size(resizeWidth, resizeHeight);
+			resizeRequest = false;
+			windowResized();			
+		}	
 		handleDraw();
+	}
+	
+	public void handleDraw() {
+
+		super.handleDraw();
 	}
 
 	/**
@@ -500,6 +515,13 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 		}
 	}
 
+	@Override
+	public void resize(int iwidth, int iheight) {
+		resizeRequest = true;
+		resizeWidth = iwidth;
+		resizeHeight = iheight;
+	}
+	
 	/**
 	 * Overrides PApplet's colorMode(int mode) method.
 	 * 
@@ -570,6 +592,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 			}
 		} else
 			super.paint();
+		
 	}
 
 	/**
@@ -825,8 +848,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 		int iwidth = e.getComponent().getWidth() - (insets.left + insets.right);
 		int iheight = e.getComponent().getHeight()
 				- (insets.top + insets.bottom);
-		resizeRenderer(iwidth, iheight);
-		windowResized();
+		resize(iwidth, iheight);
 	}
 
 	/*
