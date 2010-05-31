@@ -14,7 +14,8 @@
 	
 
 	<property file="./resources/build.properties" />
-	
+	<property file="./resources/default.properties" />
+
 	<description>
         ${ant.description}
     </description>
