@@ -3,4 +3,5 @@ bin/
 web/
 reference/
 distribution/
+resources/build.properties
 
