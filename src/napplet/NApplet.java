@@ -50,7 +50,9 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 	 * Overrides PApplet's millis() routine.
 	 */
 	public int millis() {
-		return (int) (parentPApplet.millis() - millisOffset);
+		if (embeddedNApplet || windowedNApplet)
+			return (int) (parentPApplet.millis() - millisOffset);
+		else return super.millis();
 	}
 
 	// New members for Napplet
