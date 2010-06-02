@@ -589,13 +589,12 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 	protected void paint() {
 		if (embeddedNApplet) {
 			if (!nappletHidden) {
-				loadPixels();
+				//loadPixels();
 				parentPApplet.tint(nappletTint);
 				parentPApplet.image(this.g, 0, 0);
 			}
 		} else
 			super.paint();
-
 	}
 
 	/**
