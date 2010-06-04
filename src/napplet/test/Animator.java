@@ -50,7 +50,7 @@ public class Animator extends NApplet {
 	}
 
 	public PImage get() {
-//		System.out.println("Get!");
+		System.out.println("Get!");
 		PImage output = new PImage(width, height);
 		output.parent = g.parent;
 		loadPixels();
@@ -59,26 +59,6 @@ public class Animator extends NApplet {
 		return output;
 	}
 	
-	public void loadPixels() {
-
-	    if ((g.pixels == null) || (g.pixels.length != width * height)) {
-	      g.pixels = new int[width * height];
-	    }
-
-//	    int[] p = ((BufferedImage) (g.image)).getRGB(0, 0, width, height, g.pixels, 0, width);
-//	    pixels = g.pixels;
-//	    raster.getDataElements(0, 0, width, height, pixels);
-	}
-	
-	public PImage get(int x, int y, int w, int h) {
-		PImage output = new PImage(w, h);
-		output.parent = g.parent;
-		loadPixels();
-		output.loadPixels();
-		System.arraycopy(g.pixels, 0, output.pixels, 0, pixels.length);
-		output.updatePixels();
-		return output;
-	}
 
 	void nextFrame() {
 		frames[currentFrame] = get(); // Get the display window
