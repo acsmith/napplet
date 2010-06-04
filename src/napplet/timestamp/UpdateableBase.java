@@ -11,6 +11,10 @@ public abstract class UpdateableBase implements Updateable {
 
 	public List<Timestamp> dependsOnList = new ArrayList<Timestamp>();
 
+	public List<Timestamp> dependsOnList() {
+		return dependsOnList;
+	}
+	
 	public void addDependent(Timestamp t) {
 		dependsOnList.add(t);
 	}
