@@ -50,7 +50,7 @@ public class Animator extends NApplet {
 	}
 
 	public PImage get() {
-		System.out.println("Get!");
+		// System.out.println("Get!");
 		PImage output = new PImage(width, height);
 		output.parent = g.parent;
 		loadPixels();
