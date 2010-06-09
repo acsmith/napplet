@@ -377,8 +377,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 	 */
 	public void runFrame() {
 		if (resizeRequest) {
-			if (!embeddedNApplet)
-				size(resizeWidth, resizeHeight);
+			//resizeRenderer(resizeWidth, resizeHeight);
 			resizeRequest = false;
 			windowResized();
 		}
@@ -479,37 +478,8 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 					height = iheight;
 				}
 			}
-		} else {
+		} else {			
 			super.size(iwidth, iheight, irenderer, ipath);
-//
-//			// This is for standalone and windowed napplets. Basically cribbed
-//			// all this from PApplet.size(), but replaced the
-//			// exception-throwing.
-//
-//			setSize(iwidth, iheight);
-//			setPreferredSize(new Dimension(iwidth, iheight));
-//			if (ipath != null)
-//				ipath = savePath(ipath);
-//
-//			String currentRenderer = g.getClass().getName();
-//			if (currentRenderer.equals(irenderer)) {
-//				resizeRenderer(iwidth, iheight);
-//			} else {
-//
-//				g = makeGraphics(iwidth, iheight, irenderer, ipath, true);
-//				width = iwidth;
-//				height = iheight;
-//
-//				defaultSize = false;
-//
-//				// The PApplet throws a custom exception here to force a re-run
-//				// of setup(). If we allow the NApplet to do that, it will be
-//				// caught by the parent PApplet, causing all kinds of
-//				// unfortunate side effects. So instead, we force a re-run of
-//				// setup() by simply decrementing frameCount.
-//
-//				//frameCount--;
-//			}
 		}
 	}
 
@@ -547,6 +517,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 		float maxA = (g.colorModeA == 0.0) ? 255 : g.colorModeA;
 
 		super.colorMode(mode, maxX, maxY, maxZ, maxA);
+		
 	}
 
 	/**

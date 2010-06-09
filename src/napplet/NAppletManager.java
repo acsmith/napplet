@@ -128,7 +128,7 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 			parentPApplet.frame.setResizable(resizeModeRequested);
 			resizeModeChangeRequested = false;
 		}
-
+		
 		if (!(componentListenerInitialized)
 				&& (parentPApplet.getParent() != null)) {
 			parentPApplet.getParent().addComponentListener(this);
