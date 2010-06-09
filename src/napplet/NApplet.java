@@ -2,6 +2,7 @@ package napplet;
 
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -137,6 +138,10 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 	protected int resizeWidth;
 	protected int resizeHeight;
 
+	protected boolean frameResizeRequest = false;
+	protected int frameResizeWidth;
+	protected int frameResizeHeight;
+	
 	static public class NAppletRendererChangeException extends
 			RendererChangeException {
 	}
@@ -388,9 +393,24 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 		super.resizeRenderer(w, h);
 	}
 
+	public Frame findFrame() {		
+		java.awt.Container f = getParent();
+		while (!(f instanceof Frame) && f!=null)
+			f = f.getParent();
+		return (Frame) f;
+	}
+	
 	public void handleDraw() {
-		
+			if (frame==null && !embeddedNApplet) frame = findFrame();
+
 			super.handleDraw();
+			if (frameResizeRequest && frame != null) {
+				Insets insets = frame.getInsets();
+				frame.setSize(frameResizeWidth + insets.left + insets.right, frameResizeHeight + insets.top + insets.bottom);
+//				frame.setBounds(0, 0, frameResizeWidth + insets.left + insets.right, 
+//						frameResizeHeight + insets.top + insets.bottom);
+				frameResizeRequest = false;
+			}
 		
 	}
 
@@ -434,7 +454,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 	 *            true if the window should be user-resizable.
 	 */
 	public void setResizable(boolean resizable) {
-		if (!embeddedNApplet)
+		if (!embeddedNApplet && frame!=null)
 			frame.setResizable(resizable);
 	}
 
@@ -451,6 +471,11 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 			super.exit();
 	}
 
+
+	public void size(int iwidth, int iheight) {
+		size(iwidth, iheight, P2D, null);
+	}
+	
 	/**
 	 * Override for PApplet.size(). Falls through for standalone or windowed
 	 * NApplets.
@@ -484,6 +509,9 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 			}
 		} else {			
 			super.size(iwidth, iheight, irenderer, ipath);
+			frameResizeRequest = true;
+			frameResizeWidth = iwidth;
+			frameResizeHeight = iheight;
 		}
 	}
 
@@ -560,7 +588,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 		if (embeddedNApplet) {
 			if (!nappletHidden) {
 				loadPixels();
-				System.out.println(width + ", " + height + "   " + g.width + ", " + g.height + "   " + g.pixels.length);
+//				System.out.println(width + ", " + height + "   " + g.width + ", " + g.height + "   " + g.pixels.length);
 				parentPApplet.tint(nappletTint);
 				parentPApplet.image(this.g, 0, 0);
 			}

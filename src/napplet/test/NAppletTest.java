@@ -1,14 +1,16 @@
 package napplet.test;
 
+import napplet.NApplet;
 import napplet.NAppletManager;
-import processing.core.PApplet;
+import processing.core.PConstants;
 
 @SuppressWarnings("serial")
-public class NAppletTest extends PApplet {
+public class NAppletTest extends NApplet implements PConstants {
 	
 	NAppletManager nappletManager;
 	
 	public void setup() {
+		System.out.println("Setup");
 		size(300, 400);
 		nappletManager = new NAppletManager(this);
 		nappletManager.createEmbeddedNApplet("MouseBlock", 25, 25);

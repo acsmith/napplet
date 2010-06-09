@@ -239,13 +239,8 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 	}
 
 	public void setResizable(boolean resizable) {
-		if (parentPApplet instanceof NApplet)
-			((NApplet) parentPApplet).setResizable(resizable);
-		else {
 			resizeModeChangeRequested = true;
 			resizeModeRequested = resizable;
-		}
-
 	}
 
 	public NApplet createWindowedNApplet(String nappletClassName, int x, int y) {
