@@ -4,17 +4,17 @@ import napplet.NApplet;
 import napplet.NAppletManager;
 
 @SuppressWarnings("serial")
-public class AnimatorTest extends NApplet {
+public class AnimatorTest extends processing.core.PApplet {
 
 	NAppletManager nappletManager; 
 	
 	public void setup() {
 		size(300,300);
 		nappletManager = new NAppletManager(this);
-		NApplet embedAnim = nappletManager.createEmbeddedNApplet("napplet.test.Animator", 0, 0);
 
 		nappletManager.createWindowedNApplet("napplet.test.Animator", 500, 300);
-		
+
+		NApplet embedAnim = nappletManager.createEmbeddedNApplet("napplet.test.Animator", 50, 50);
 		embedAnim.nappletTint = 0xffffffff;
 	}
 

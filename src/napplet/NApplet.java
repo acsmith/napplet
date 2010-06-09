@@ -1,6 +1,7 @@
 package napplet;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -52,7 +53,8 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 	public int millis() {
 		if (embeddedNApplet || windowedNApplet)
 			return (int) (parentPApplet.millis() - millisOffset);
-		else return super.millis();
+		else
+			return super.millis();
 	}
 
 	// New members for Napplet
@@ -134,6 +136,10 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 	protected boolean resizeRequest = false;
 	protected int resizeWidth;
 	protected int resizeHeight;
+
+	static public class NAppletRendererChangeException extends
+			RendererChangeException {
+	}
 
 	/**
 	 * Base constructor. Use initEmbeddedNApplet() or initWindowedNApplet() to
@@ -225,8 +231,9 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 		// PApplet.handleDraw() doesn't do it again. Not strictly necessary to
 		// do it this way for embedded NApplets, but for the sake of consistency
 		// and convenience we will anyway.
-		setup();
-		frameCount++;
+		
+		//setup();
+//		frameCount++;
 	}
 
 	/**
@@ -256,8 +263,10 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 		// Do setup now, so the Frame can get width and height. Then advance the
 		// frameCount once, so PApplet.handleDraw() doesn't run it again.
 
-		setup();
-		frameCount++;
+
+		//setup();
+		
+//		frameCount++;
 
 	}
 
@@ -392,8 +401,9 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 	}
 
 	public void handleDraw() {
-
-		super.handleDraw();
+		
+			super.handleDraw();
+		
 	}
 
 	/**
@@ -512,7 +522,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 				// unfortunate side effects. So instead, we force a re-run of
 				// setup() by simply decrementing frameCount.
 
-				frameCount--;
+				//frameCount--;
 			}
 		}
 	}
@@ -863,6 +873,11 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 	 */
 	@Override
 	public void componentShown(ComponentEvent e) {
+	}
+
+	@Override
+	public Frame getFrame() {
+		return this.frame;
 	}
 
 }

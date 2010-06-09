@@ -1,5 +1,7 @@
 package napplet;
 
+import java.awt.Frame;
+
 import processing.core.PStyle;
 
 /**
@@ -42,6 +44,11 @@ public class DrawNit extends NitBase {
 			parentPApplet.g.getStyle(pStyle);
 			parentPApplet.g.popStyle();
 		}
+	}
+
+	@Override
+	public Frame getFrame() {
+		return null;
 	}
 
 }

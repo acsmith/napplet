@@ -1,5 +1,6 @@
 package napplet;
 
+import java.awt.Frame;
 import java.awt.event.FocusEvent;
 import java.awt.event.InputEvent;
 
@@ -63,6 +64,8 @@ public interface Nit {
 	 *         PApplet.)
 	 */
 	public abstract boolean isEmbedded();
+	
+	public abstract Frame getFrame();
 
 	/**
 	 * Get the NAppletManager object responsible for handling this Nit.

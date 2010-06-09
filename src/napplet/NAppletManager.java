@@ -36,16 +36,16 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 	Nit focusNit;
 	Nit mouseNit;
 	public int mouseX, mouseY;
-	
+
 	public boolean componentListenerInitialized = false;
-	
+
 	public boolean resizeModeChangeRequested = false;
 	public boolean resizeModeRequested;
-	
+
 	public boolean resizeRequested = false;
 	public int resizeWidth;
 	public int resizeHeight;
-	
+
 	public NAppletManager(PApplet pap) {
 		super();
 		parentPApplet = pap;
@@ -60,7 +60,7 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 		parentPApplet.registerPre(this);
 		parentPApplet.registerDraw(this);
 		parentPApplet.registerPost(this);
-		
+
 		parentPApplet.removeMouseListener(parentPApplet);
 		parentPApplet.addMouseListener(this);
 		parentPApplet.removeMouseMotionListener(parentPApplet);
@@ -102,11 +102,20 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 
 	public void draw() {
 		for (Nit nit : nitList) {
-			parentPApplet.pushMatrix();
-			if (nit.isEmbedded())
+			if (nit.isEmbedded()) {
+				parentPApplet.pushMatrix();
 				parentPApplet.translate(nit.getPositionX(), nit.getPositionY());
+			}
 			nit.runFrame();
-			parentPApplet.popMatrix();
+			if (nit.isEmbedded())
+				parentPApplet.popMatrix();
+
+			if (nit instanceof NApplet && !(nit.isEmbedded())
+					&& nit.getFrame() == null) {
+				@SuppressWarnings("unused")
+				NFrame nFrame = new NFrame(parentPApplet, (NApplet) nit, nit
+						.getPositionX(), nit.getPositionY());
+			}
 		}
 		while (killList.size() > 0) {
 			nitList.remove(killList.get(0));
@@ -119,15 +128,16 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 			parentPApplet.frame.setResizable(resizeModeRequested);
 			resizeModeChangeRequested = false;
 		}
-		
-		if (!(componentListenerInitialized) && (parentPApplet.getParent()!=null)) {
+
+		if (!(componentListenerInitialized)
+				&& (parentPApplet.getParent() != null)) {
 			System.out.println("   Initializing component listener.");
 			parentPApplet.getParent().addComponentListener(this);
 			componentListenerInitialized = true;
-			
+
 		}
 	}
-	
+
 	void passMouseEvent(Nit nit, MouseEvent e) {
 		MouseEvent ep = new MouseEvent((Component) (e.getSource()), e.getID(),
 				e.getWhen(), e.getModifiers(), e.getX(), e.getY(), e
@@ -224,15 +234,18 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 			resizeModeChangeRequested = true;
 			resizeModeRequested = resizable;
 		}
-		
+
 	}
 
 	public NApplet createWindowedNApplet(String nappletClassName, int x, int y) {
 		NApplet nap = NApplet.createNApplet(parentPApplet, nappletClassName,
 				this);
 		if (nap != null) {
-			@SuppressWarnings("unused")
-			NFrame nFrame = new NFrame(parentPApplet, nap, x, y);
+			nap.nappletX = x;
+			nap.nappletY = y;
+			nap.initWindowedNApplet(parentPApplet, x, y, parentPApplet.sketchPath);
+			// @SuppressWarnings("unused")
+			// NFrame nFrame = new NFrame(parentPApplet, nap, x, y);
 			addNit(nap);
 		}
 		return nap;

@@ -13,7 +13,7 @@ public class NFrame extends Frame {
 	public NFrame(PApplet pap, NApplet nap, int x, int y) {
 		super();
 		napplet = nap;
-		napplet.initWindowedNApplet(pap, x, y, pap.sketchPath);
+//		napplet.initWindowedNApplet(pap, x, y, pap.sketchPath);
 
 		add(napplet);
 

@@ -33,11 +33,6 @@ public class Animator extends NApplet {
 	}
 
 	public void draw() {
-//		if (frameCount==1) {
-//			for (int i = 0; i < frames.length; i++) {
-//				frames[i] = get(); // Create a blank frame
-//			}
-//		}
 		int currentTime = millis();
 		if (currentTime > lastTime + 30) {
 			nextFrame();
@@ -48,17 +43,6 @@ public class Animator extends NApplet {
 		}
 
 	}
-
-	public PImage get() {
-		// System.out.println("Get!");
-		PImage output = new PImage(width, height);
-		output.parent = g.parent;
-		loadPixels();
-		System.arraycopy(g.pixels, 0, output.pixels, 0, g.pixels.length);
-		output.updatePixels();
-		return output;
-	}
-	
 
 	void nextFrame() {
 		frames[currentFrame] = get(); // Get the display window
