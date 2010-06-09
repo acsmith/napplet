@@ -227,13 +227,6 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 
 		embeddedNApplet = true;
 
-		// Do setup now, and advance the frame count so that
-		// PApplet.handleDraw() doesn't do it again. Not strictly necessary to
-		// do it this way for embedded NApplets, but for the sake of consistency
-		// and convenience we will anyway.
-		
-		//setup();
-//		frameCount++;
 	}
 
 	/**
@@ -259,14 +252,6 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 		windowedNApplet = true;
 
 		addListeners();
-
-		// Do setup now, so the Frame can get width and height. Then advance the
-		// frameCount once, so PApplet.handleDraw() doesn't run it again.
-
-
-		//setup();
-		
-//		frameCount++;
 
 	}
 
@@ -495,35 +480,36 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 				}
 			}
 		} else {
-
-			// This is for standalone and windowed napplets. Basically cribbed
-			// all this from PApplet.size(), but replaced the
-			// exception-throwing.
-
-			setSize(iwidth, iheight);
-			setPreferredSize(new Dimension(iwidth, iheight));
-			if (ipath != null)
-				ipath = savePath(ipath);
-
-			String currentRenderer = g.getClass().getName();
-			if (currentRenderer.equals(irenderer)) {
-				resizeRenderer(iwidth, iheight);
-			} else {
-
-				g = makeGraphics(iwidth, iheight, irenderer, ipath, true);
-				width = iwidth;
-				height = iheight;
-
-				defaultSize = false;
-
-				// The PApplet throws a custom exception here to force a re-run
-				// of setup(). If we allow the NApplet to do that, it will be
-				// caught by the parent PApplet, causing all kinds of
-				// unfortunate side effects. So instead, we force a re-run of
-				// setup() by simply decrementing frameCount.
-
-				//frameCount--;
-			}
+			super.size(iwidth, iheight, irenderer, ipath);
+//
+//			// This is for standalone and windowed napplets. Basically cribbed
+//			// all this from PApplet.size(), but replaced the
+//			// exception-throwing.
+//
+//			setSize(iwidth, iheight);
+//			setPreferredSize(new Dimension(iwidth, iheight));
+//			if (ipath != null)
+//				ipath = savePath(ipath);
+//
+//			String currentRenderer = g.getClass().getName();
+//			if (currentRenderer.equals(irenderer)) {
+//				resizeRenderer(iwidth, iheight);
+//			} else {
+//
+//				g = makeGraphics(iwidth, iheight, irenderer, ipath, true);
+//				width = iwidth;
+//				height = iheight;
+//
+//				defaultSize = false;
+//
+//				// The PApplet throws a custom exception here to force a re-run
+//				// of setup(). If we allow the NApplet to do that, it will be
+//				// caught by the parent PApplet, causing all kinds of
+//				// unfortunate side effects. So instead, we force a re-run of
+//				// setup() by simply decrementing frameCount.
+//
+//				//frameCount--;
+//			}
 		}
 	}
 

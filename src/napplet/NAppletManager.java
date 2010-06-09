@@ -131,7 +131,6 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 
 		if (!(componentListenerInitialized)
 				&& (parentPApplet.getParent() != null)) {
-			System.out.println("   Initializing component listener.");
 			parentPApplet.getParent().addComponentListener(this);
 			componentListenerInitialized = true;
 
@@ -314,21 +313,19 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 	}
 
 	@Override
-	public void componentHidden(ComponentEvent arg0) {
+	public void componentHidden(ComponentEvent e) {
 	}
 
 	@Override
-	public void componentMoved(ComponentEvent arg0) {
+	public void componentMoved(ComponentEvent e) {
 	}
 
 	@Override
-	public void componentResized(ComponentEvent arg0) {
-		System.out.println("Resized!");
-
+	public void componentResized(ComponentEvent e) {
 	}
 
 	@Override
-	public void componentShown(ComponentEvent arg0) {
+	public void componentShown(ComponentEvent e) {
 	}
 
 }
