@@ -101,6 +101,7 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 	}
 
 	public void draw() {
+		parentPApplet.loadPixels();
 		for (Nit nit : nitList) {
 			if (nit.isEmbedded()) {
 				parentPApplet.pushMatrix();
@@ -117,6 +118,7 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 						.getPositionX(), nit.getPositionY());
 			}
 		}
+		parentPApplet.updatePixels();
 		while (killList.size() > 0) {
 			nitList.remove(killList.get(0));
 			killList.remove(0);
@@ -127,6 +129,16 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 		if (resizeModeChangeRequested && parentPApplet.frame != null) {
 			parentPApplet.frame.setResizable(resizeModeRequested);
 			resizeModeChangeRequested = false;
+		}
+		
+		for (Nit n: nitList) {
+			if (n instanceof NApplet) {
+				NApplet nap = (NApplet) n;
+				if (nap.resizeRequest) {
+					nap.resizeRenderer(nap.resizeWidth, nap.resizeHeight);
+					nap.resizeRequest = false;					
+				}
+			}
 		}
 		
 		if (!(componentListenerInitialized)
@@ -243,8 +255,6 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 			nap.nappletX = x;
 			nap.nappletY = y;
 			nap.initWindowedNApplet(parentPApplet, x, y, parentPApplet.sketchPath);
-			// @SuppressWarnings("unused")
-			// NFrame nFrame = new NFrame(parentPApplet, nap, x, y);
 			addNit(nap);
 		}
 		return nap;

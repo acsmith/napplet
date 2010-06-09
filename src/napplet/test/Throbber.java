@@ -17,10 +17,10 @@ public class Throbber extends NApplet {
 	public void draw() {
 		background(0);
 		System.out.println(width + ", " + height);
-		if (frameCount % 10 == 5) {
+//		if (frameCount%10==5) {
 			int a = (int) (amp * sin(TWO_PI * frameCount / framePeriod));
 
 			resize(bw + a, bh + a);
-		}
+//		}		
 	}
 }

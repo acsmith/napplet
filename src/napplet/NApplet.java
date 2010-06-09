@@ -376,12 +376,16 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 	 * @see napplet.Nit#runFrame()
 	 */
 	public void runFrame() {
-		if (resizeRequest) {
-			//resizeRenderer(resizeWidth, resizeHeight);
-			resizeRequest = false;
-			windowResized();
-		}
 		handleDraw();
+		if (resizeRequest) {
+//			resizeRenderer(resizeWidth, resizeHeight);
+//			resizeRequest = false;
+//			windowResized();
+		}
+	}
+	
+	public void resizeRenderer(int w, int h) {
+		super.resizeRenderer(w, h);
 	}
 
 	public void handleDraw() {
@@ -556,6 +560,7 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 		if (embeddedNApplet) {
 			if (!nappletHidden) {
 				loadPixels();
+				System.out.println(width + ", " + height + "   " + g.width + ", " + g.height + "   " + g.pixels.length);
 				parentPApplet.tint(nappletTint);
 				parentPApplet.image(this.g, 0, 0);
 			}
