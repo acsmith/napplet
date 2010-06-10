@@ -103,12 +103,14 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 	public void draw() {
 		parentPApplet.loadPixels();
 		for (Nit nit : nitList) {
+			boolean translated = false;
 			if (nit.isEmbedded()) {
 				parentPApplet.pushMatrix();
 				parentPApplet.translate(nit.getPositionX(), nit.getPositionY());
+				translated = true;
 			}
 			nit.runFrame();
-			if (nit.isEmbedded())
+			if (translated)
 				parentPApplet.popMatrix();
 
 			if (nit instanceof NApplet && !(nit.isEmbedded())

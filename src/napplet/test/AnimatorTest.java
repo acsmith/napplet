@@ -1,10 +1,11 @@
 package napplet.test;
 
+import processing.core.PApplet;
 import napplet.NApplet;
 import napplet.NAppletManager;
 
 @SuppressWarnings("serial")
-public class AnimatorTest extends processing.core.PApplet {
+public class AnimatorTest extends PApplet {
 
 	NAppletManager nappletManager; 
 	
