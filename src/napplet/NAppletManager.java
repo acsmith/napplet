@@ -118,7 +118,7 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 						.getPositionX(), nit.getPositionY());
 			}
 		}
-		
+
 		parentPApplet.updatePixels();
 		while (killList.size() > 0) {
 			nitList.remove(killList.get(0));
@@ -172,9 +172,13 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 			if (nit instanceof NApplet)
 				nit.focusGained(new FocusEvent(focusGainer, FOCUS_GAINED,
 						false, focusLoser));
+			else if (nit != null)
+				nit.focusGained(null);
 			if (focusNit instanceof NApplet)
 				focusNit.focusLost(new FocusEvent(focusLoser, FOCUS_LOST,
 						false, focusGainer));
+			else if (focusNit != null)
+				focusNit.focusLost(null);
 			focusNit = nit;
 		}
 
@@ -235,11 +239,10 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 	}
 
 	public void addWindowedNApplet(NApplet nap, int x, int y) {
-		nap.initWindowedNApplet(parentPApplet, x, y,
-				parentPApplet.sketchPath);
+		nap.initWindowedNApplet(parentPApplet, x, y, parentPApplet.sketchPath);
 		addNit(nap);
 	}
-	
+
 	public NApplet createEmbeddedNApplet(String nappletClassName, int x, int y) {
 		NApplet nap = NApplet.createNApplet(parentPApplet, nappletClassName,
 				this);

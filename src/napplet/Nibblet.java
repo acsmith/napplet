@@ -49,10 +49,15 @@ public class Nibblet extends NitBase {
 			g.resetMatrix();
 			g.translate(getPositionX(), getPositionY());
 		}
-		if (frameCount == 0)
+		if (frameCount == 0) {
+			this.preSetup();
 			this.setup();
-		else
+			this.postSetup();
+		} else {
+			this.preDraw();
 			this.draw();
+			this.postDraw();
+		}
 		if (internalResetMatrix) {
 			g.popMatrix();
 		}
@@ -63,6 +68,36 @@ public class Nibblet extends NitBase {
 
 		frameCount++;
 
+	}
+
+	public void size(int w, int h) {
+		width = w;
+		height = h;
+	}
+	
+	public void position(int x, int y) {
+		nitX = x;
+		nitY = y;
+	}
+	
+	// The pre- and post- draw and setup methods are provided for subclassing
+	// utility; for example, you can create a Nibblet subclass outside of the
+	// PDE (e.g., in Eclipse) that does some things in preDraw() and postDraw(),
+	// and then leaves the user who subclasses it further in the PDE free to do
+	// whatever s/he wants in draw() without needing to worry about calling 
+	// super.draw() and such.
+	
+
+	public void preSetup() {
+	}
+
+	public void postSetup() {
+	}
+
+	public void preDraw() {
+	}
+
+	public void postDraw() {
 	}
 
 	@Override

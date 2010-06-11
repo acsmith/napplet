@@ -32,6 +32,8 @@ public abstract class NitBase implements Nit, PConstants {
 	public int keyCode;
 	public boolean keyPressed;
 
+	public boolean focused = false;
+	
 	public int getHeight() {
 		return height;
 	}
@@ -144,14 +146,16 @@ public abstract class NitBase implements Nit, PConstants {
 	}
 
 	public void focusGained(FocusEvent gainFocus) {
+		focused = true;
 		focusGained();
 	}
 
 	public void focusLost(FocusEvent loseFocus) {
+		focused = false;
 		focusLost();
 	}
 
-	// Everything after this is empty and meant to be overriden by a subclass if
+	// Everything after this is empty and meant to be overridden by a subclass if
 	// necessary.
 
 	public void setup() {

@@ -17,12 +17,14 @@ public class Box extends Nibblet {
 	}
 	
 	public void draw() {
-		fill(50);
+		if (focused)
+			fill(100);
+		else
+			fill(0);
 		rect(0, 0, width, height);
-		String s = "" + frameCount;
+		String s = "" + frameCount + ": " + mouseX + ", " + mouseY;
 		fill(255);
 		text(s, width/2, height/2);
-		
 	}
 	
 }
