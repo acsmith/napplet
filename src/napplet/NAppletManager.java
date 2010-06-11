@@ -73,8 +73,6 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 	public void addNit(Nit nit) {
 		nit.setNAppletManager(this);
 		nitList.add(nit);
-		if (!(nit instanceof NApplet))
-			nit.setup();
 	}
 
 	public void addNApplet(NApplet napplet) {
@@ -120,6 +118,7 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 						.getPositionX(), nit.getPositionY());
 			}
 		}
+		
 		parentPApplet.updatePixels();
 		while (killList.size() > 0) {
 			nitList.remove(killList.get(0));
@@ -132,17 +131,17 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 			parentPApplet.frame.setResizable(resizeModeRequested);
 			resizeModeChangeRequested = false;
 		}
-		
-		for (Nit n: nitList) {
+
+		for (Nit n : nitList) {
 			if (n instanceof NApplet) {
 				NApplet nap = (NApplet) n;
 				if (nap.resizeRequest) {
 					nap.resizeRenderer(nap.resizeWidth, nap.resizeHeight);
-					nap.resizeRequest = false;					
+					nap.resizeRequest = false;
 				}
 			}
 		}
-		
+
 		if (!(componentListenerInitialized)
 				&& (parentPApplet.getParent() != null)) {
 			parentPApplet.getParent().addComponentListener(this);
@@ -228,33 +227,38 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 		return createEmbeddedNApplet(nappletClassName, x, y);
 	}
 
+	public void addEmbeddedNApplet(NApplet nap, int x, int y) {
+		nap.initEmbeddedNApplet(parentPApplet, x, y);
+		addNit(nap);
+		if (nap.g.format == processing.core.PConstants.RGB)
+			nap.g.format = processing.core.PConstants.ARGB;
+	}
+
+	public void addWindowedNApplet(NApplet nap, int x, int y) {
+		nap.initWindowedNApplet(parentPApplet, x, y,
+				parentPApplet.sketchPath);
+		addNit(nap);
+	}
+	
 	public NApplet createEmbeddedNApplet(String nappletClassName, int x, int y) {
 		NApplet nap = NApplet.createNApplet(parentPApplet, nappletClassName,
 				this);
-		if (nap != null) {
-			nap.initEmbeddedNApplet(parentPApplet, x, y);
-			addNit(nap);
-			if (nap.g.format == processing.core.PConstants.RGB)
-				nap.g.format = processing.core.PConstants.ARGB;
-		}
+		if (nap != null)
+			addEmbeddedNApplet(nap, x, y);
 		return nap;
-	}
-
-	public void setResizable(boolean resizable) {
-			resizeModeChangeRequested = true;
-			resizeModeRequested = resizable;
 	}
 
 	public NApplet createWindowedNApplet(String nappletClassName, int x, int y) {
 		NApplet nap = NApplet.createNApplet(parentPApplet, nappletClassName,
 				this);
-		if (nap != null) {
-			nap.nappletX = x;
-			nap.nappletY = y;
-			nap.initWindowedNApplet(parentPApplet, x, y, parentPApplet.sketchPath);
-			addNit(nap);
-		}
+		if (nap != null)
+			addWindowedNApplet(nap, x, y);
 		return nap;
+	}
+
+	public void setResizable(boolean resizable) {
+		resizeModeChangeRequested = true;
+		resizeModeRequested = resizable;
 	}
 
 	public void killNit(Nit nit) {

@@ -471,11 +471,11 @@ public class NApplet extends PApplet implements Nit, MouseWheelListener,
 			super.exit();
 	}
 
-
-	public void size(int iwidth, int iheight) {
-		size(iwidth, iheight, P2D, null);
-	}
-	
+//
+//	public void size(int iwidth, int iheight) {
+//		size(iwidth, iheight, P2D, null);
+//	}
+//	
 	/**
 	 * Override for PApplet.size(). Falls through for standalone or windowed
 	 * NApplets.

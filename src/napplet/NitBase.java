@@ -8,11 +8,14 @@ import java.awt.event.MouseWheelEvent;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
+import processing.core.PGraphics;
 
 public abstract class NitBase implements Nit, PConstants {
 
 	public NAppletManager nappletManager;
 	public PApplet parentPApplet;
+	public PGraphics g;
+	
 	public int height, width;
 	public int nitX, nitY;
 	public boolean embeddedNit = true;
@@ -43,6 +46,7 @@ public abstract class NitBase implements Nit, PConstants {
 
 	public void setNAppletManager(NAppletManager nappletManager) {
 		this.nappletManager = nappletManager;
+		this.parentPApplet = nappletManager.parentPApplet;
 	}
 
 	public int getPositionX() {

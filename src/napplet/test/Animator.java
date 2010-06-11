@@ -23,7 +23,7 @@ public class Animator extends NApplet {
 	int lastTime = 0;
 
 	public void setup() {
-		size(200, 200, JAVA2D);
+		size(200, 200);
 		strokeWeight(12);
 		smooth();
 		background(204);

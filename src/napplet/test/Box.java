@@ -1,23 +1,27 @@
 package napplet.test;
 
-import napplet.DrawNit;
+import napplet.Nibblet;
 
-public class Box extends DrawNit {
+public class Box extends Nibblet {
 
 	public Box(int x, int y, int w, int h) {
 		nitX = x;
 		nitY = y;
 		width = w;
-		height = h;
+		height = h;		
+	}
+	
+	public void setup() {
+		stroke(255);
+		textAlign(CENTER, CENTER);
 	}
 	
 	public void draw() {
-		parentPApplet.stroke(255);
-		parentPApplet.fill(50);
-		parentPApplet.rect(0, 0, width, height);
+		fill(50);
+		rect(0, 0, width, height);
 		String s = "" + frameCount;
-		parentPApplet.fill(255);
-		parentPApplet.text(s, width/2, height/2);
+		fill(255);
+		text(s, width/2, height/2);
 		
 	}
 	

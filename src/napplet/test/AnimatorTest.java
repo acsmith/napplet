@@ -10,7 +10,7 @@ public class AnimatorTest extends PApplet {
 	NAppletManager nappletManager; 
 	
 	public void setup() {
-		size(300,300);
+		size(300, 300, P2D);
 		nappletManager = new NAppletManager(this);
 
 		nappletManager.createWindowedNApplet("napplet.test.Animator", 500, 300);
