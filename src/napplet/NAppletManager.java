@@ -165,10 +165,10 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 		Nit nit = containingNit(mouseX, mouseY);
 
 		if (nit != focusNit) {
-			NApplet focusGainer = (nit instanceof NApplet) ? (NApplet) nit
-					: null;
-			NApplet focusLoser = (focusNit instanceof NApplet) ? (NApplet) focusNit
-					: null;
+			NApplet focusGainer = (nit instanceof NApplet) ? 
+					(NApplet) nit : null;
+			NApplet focusLoser = (focusNit instanceof NApplet) ? 
+					(NApplet) focusNit : null;
 			if (nit instanceof NApplet)
 				nit.focusGained(new FocusEvent(focusGainer, FOCUS_GAINED,
 						false, focusLoser));

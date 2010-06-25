@@ -498,13 +498,15 @@ public class Nibblet extends NitBase {
 		g.scale(x, y, z);
 	}
 
-	public void skewX(float angle) {
-		g.skewX(angle);
-	}
-
-	public void skewY(float angle) {
-		g.skewY(angle);
-	}
+//  Are skewX() and skewY() new since processing 1.1?  Must be.	
+//
+//	public void skewX(float angle) {
+//		g.skewX(angle);
+//	}
+//
+//	public void skewY(float angle) {
+//		g.skewY(angle);
+//	}
 
 	public void resetMatrix() {
 		g.resetMatrix();
