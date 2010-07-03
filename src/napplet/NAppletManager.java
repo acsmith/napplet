@@ -159,16 +159,19 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 	}
 
 	public void handleMouseEvent(MouseEvent e) {
+		// TODO Fix the bug for mouse move and drag events that start in one
+		// napplet and end in another (or something like that).
+
 		mouseX = e.getX();
 		mouseY = e.getY();
 		int id = e.getID();
 		Nit nit = containingNit(mouseX, mouseY);
 
 		if (nit != focusNit) {
-			NApplet focusGainer = (nit instanceof NApplet) ? 
-					(NApplet) nit : null;
-			NApplet focusLoser = (focusNit instanceof NApplet) ? 
-					(NApplet) focusNit : null;
+			NApplet focusGainer = (nit instanceof NApplet) ? (NApplet) nit
+					: null;
+			NApplet focusLoser = (focusNit instanceof NApplet) ? (NApplet) focusNit
+					: null;
 			if (nit instanceof NApplet)
 				nit.focusGained(new FocusEvent(focusGainer, FOCUS_GAINED,
 						false, focusLoser));

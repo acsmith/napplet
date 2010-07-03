@@ -11,10 +11,13 @@ public class MouseBlock extends NApplet {
 	final int MAX_BLOCK_SIZE = 30;
 	final int BLOCK_SIZE_STEP = 4;
 	
-	public void setup() {
+	public void setup() {		
 		size(100, 100);
 		blockX = width/2;
 		blockY = height/2;
+		
+		MouseWheelEavesdropper mwe = new MouseWheelEavesdropper(this);
+		
 	}
 
 	int blockX;
