@@ -200,9 +200,13 @@ public class NAppletManager implements MouseListener, MouseMotionListener,
 								.getClickCount(), e.isPopupTrigger(), e
 								.getButton());
 				parentPApplet.mouseMoved(moveEvent);
-
-			}
-			passMouseEvent(nit, e);
+				
+				if (nit==mouseNit) {
+					passMouseEvent(nit, e);
+				}
+			} else {
+				passMouseEvent(nit, e);
+			}			
 		}
 
 		if ((nit == null) || (!e.isConsumed() && mousePassthroughPolicy)) {
