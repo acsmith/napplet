@@ -4,6 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/home/acsmith/Code/processing-1.1/lib/ant.jar"/>
 	<classpathentry kind="lib" path="/home/acsmith/Code/processing-1.1/lib/ant-launcher.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/processing"/>
+	<classpathentry kind="lib" path="/home/acsmith/Code/processing-1.1/lib/core.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,8 +1,8 @@
 package napplet.test;
 
-import napplet.Nibblet;
+import napplet.FatNibblet;
 
-public class Box extends Nibblet {
+public class Box extends FatNibblet {
 
 	public Box(int x, int y, int w, int h) {
 		nitX = x;

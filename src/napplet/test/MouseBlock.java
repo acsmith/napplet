@@ -16,8 +16,6 @@ public class MouseBlock extends NApplet {
 		blockX = width/2;
 		blockY = height/2;
 		
-		MouseWheelEavesdropper mwe = new MouseWheelEavesdropper(this);
-		
 	}
 
 	int blockX;
